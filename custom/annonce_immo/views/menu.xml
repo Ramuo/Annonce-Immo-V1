@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="Immobilier" id="menu_root_immobilier" web_icon="annonce_immo,static/description/icon.png">
+        <menuitem id="menu_annonces_bien" name="Annonces">
+            <menuitem id="menu_bien" name="Bien Immobiliers" action="annonce_immo.action_bien_immobilier"/>
+        </menuitem>   
+    </menuitem>
+</odoo>

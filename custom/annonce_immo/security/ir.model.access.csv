@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+annonce_immo.access_bien_immobilier,access_bien_immobilier,annonce_immo.model_bien_immobilier,base.group_user,1,1,1,1

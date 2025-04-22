@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <record id="bien_view_tree" model="ir.ui.view">
+        <field name="name">bien.immobilier.tree</field>
+        <field name="model">bien.immobilier</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    
+
+    <record id="bien_view_form" model="ir.ui.view">
+      <field name="name">bien.immobilier.form</field>
+      <field name="model">bien.immobilier</field>
+      <field name="arch" type="xml">
+        <form string="Bien Immobilier">
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="description"/>
+              <field name="postcode"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_bien_immobilier" model="ir.actions.act_window">
+        <field name="name">Biens Immobiliers</field>
+        <field name="res_model">bien.immobilier</field>
+        <field name="view_mode">list,form</field>
+    </record>
+  </data>
+</odoo>
