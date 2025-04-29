@@ -1,6 +1,7 @@
 {
     'name': 'Product Smart Button: Sale Order Count',
     'version': '1.0.0',
+    "sequence": 10,
     'summary': 'Add a smart button to Products showing the number of related Sale Orders.',
     'description': """
         This module adds a custom smart button to the product form view that displays the count 
