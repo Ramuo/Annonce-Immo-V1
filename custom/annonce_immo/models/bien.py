@@ -5,6 +5,7 @@ class Bien(models.Model):
     _description = "Annonce de Biens Immobiliers"
 
     name = fields.Char(string="Nom", required=True)
+    type_id = fields.Many2one('type.bien', string='Type de bien')
     description = fields.Text(string="Description")
     postcode = fields.Char(string="Code Postal")
     date_availability = fields.Date(string="Disponible Le")

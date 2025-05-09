@@ -16,6 +16,7 @@
         'security/ir.model.access.csv',
         #Views
         'views/bien_view.xml',
+        'views/type_bien_view.xml',
         'views/menu.xml',
     ],
     "installable": True,

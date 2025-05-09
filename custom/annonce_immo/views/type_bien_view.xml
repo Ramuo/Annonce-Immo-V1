@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <!-- Tree view -->
+        <record id='type_bien_tree_view' model='ir.ui.view'>
+            <field name='name'>type.bien.tree</field>
+            <field name='model'>type.bien</field>
+            <field name='arch' type='xml'>
+                <list>
+                    <field name='name'/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view -->
+         <record id='type_bien_form_view' model='ir.ui.view'>
+            <field name='name'>type.bien.form</field>
+            <field name='model'>type.bien</field>
+            <field name='arch' type='xml'>
+                <form>
+                    <sheet>
+                        <group>
+                            <field name='name'/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+         </record>
+
+        <!-- Action window -->
+        <record id='action_type_bien' model='ir.actions.act_window'>
+            <field name='name'>Type de Bien</field>
+            <field name='res_model'>type.bien</field>
+            <field name='view_mode'>list,form</field>
+            <field name='view_id' ref='type_bien_tree_view'/>
+        </record>
+    </data>
+</odoo>

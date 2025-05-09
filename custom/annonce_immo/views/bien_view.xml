@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
+                <field name='type_id'/>
                 <field name="postcode"/>
                 <field name="date_availability"/>
                 <field name="expected_price"/>
@@ -27,6 +28,7 @@
             <group>
                 <field name="name" placeholder="Nom"/>
                 <group>
+                    <field name='type_id'/>
                     <field name="postcode"/>
                     <field name="date_availability"/>
                 </group>
