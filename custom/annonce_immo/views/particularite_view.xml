@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <odoo>
     <data>
         <!-- Tree view -->
-        <record id='type_bien_tree_view' model='ir.ui.view'>
-            <field name='name'>type.bien.tree</field>
-            <field name='model'>type.bien</field>
+        <record id='particularite_tree_view' model='ir.ui.view'>
+            <field name='name'>particularite.bien.tree</field>
+            <field name='model'>particularite.bien</field>
             <field name='arch' type='xml'>
                 <list>
                     <field name='name'/>
+                    <field name="color" widget="color_picker"/>
                 </list>
             </field>
         </record>
 
         <!-- Form view -->
-         <record id='type_bien_form_view' model='ir.ui.view'>
-            <field name='name'>type.bien.form</field>
-            <field name='model'>type.bien</field>
+         <record id='particularite_form_view' model='ir.ui.view'>
+            <field name='name'>particularite.bien.form</field>
+            <field name='model'>particularite.bien</field>
             <field name='arch' type='xml'>
                 <form>
                     <sheet>
                         <group>
                             <field name='name'/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </sheet>
                 </form>

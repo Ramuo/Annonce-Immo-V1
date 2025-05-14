@@ -26,7 +26,8 @@
         <form string="Bien Immobilier">
           <sheet>
             <group>
-                <field name="name" placeholder="Nom"/>
+                <field name="name"/>
+                <field name='particularite_ids' widget='many2many_tags' placeholder="Particularités du Bien" options="{'color_field': 'color'}"/>
                 <group>
                     <field name='type_id'/>
                     <field name="postcode"/>
@@ -38,17 +39,44 @@
                     <field name="selling_price"/>
                 </group>
             </group>
+            <!-- Notebook -->
+            <notebook>
+              <!-- Page Description -->
+              <page string="Description">
+                <group>
+                  <field name="description"/>
+                  <field name="bedrooms"/>
+                  <field name="living_area"/>
+                  <field name="facades"/>
+                  <field name="garage"/>
+                  <field name="garden"/>
+                  <field name="garden_area"/>
+                  <field name="garden_orientation"/>
+                </group>
+              </page>
+              <!-- Page Offers => One2many -->
+              <page string="Offers">
+                <field name="offers_ids">
+                  <list editable="bottom">
+                    <field name='price'/>
+                    <field name='partner_id'/>
+                    <field name='validity'/>
+                    <field name='deadline'/>
+                    <field name='status'/>
+                  </list>
+                </field>
+              </page>
+              <!-- Page Other Info -->
+              <page string="Other Info">
+                <group>
+                  <field name="sales_id"/>
+                  <field name="buyer_id"/>
+                </group>
+              </page> 
+            </notebook>
           </sheet>
         </form>
       </field>
-    </record>
-
-    <!-- Action Window -->
-    <record id="action_bien_immobilier" model="ir.actions.act_window">
-        <field name="name">Biens Immobiliers</field>
-        <field name="res_model">bien.immobilier</field>
-        <field name="view_mode">list,form</field>
-        <field name="view_id" ref='bien_view_tree'/>
     </record>
   </data>
 </odoo>

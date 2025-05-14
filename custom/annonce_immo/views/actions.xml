@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <!-- Action 1 -->
+        <record id="action_bien_immobilier" model="ir.actions.act_window">
+            <field name="name">Biens Immobiliers</field>
+            <field name="res_model">bien.immobilier</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref='bien_view_tree'/>
+        </record>
+
+        <!-- Action 2 -->
+        <record id='action_type_bien' model='ir.actions.act_window'>
+            <field name='name'>Type de Bien</field>
+            <field name='res_model'>type.bien</field>
+            <field name='view_mode'>list,form</field>
+            <field name='view_id' ref='type_bien_tree_view'/>
+        </record>
+
+        <!-- Action 3 -->
+        <record id='action_particularite' model='ir.actions.act_window'>
+            <field name='name'>Particularités du Bien</field>
+            <field name='res_model'>particularite.bien</field>
+            <field name='view_mode'>list,form</field>
+            <field name='view_id' ref='particularite_tree_view'/>
+        </record>
+
+    </data>
+</odoo>

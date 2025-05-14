@@ -5,6 +5,7 @@ class Bien(models.Model):
     _description = "Annonce de Biens Immobiliers"
 
     name = fields.Char(string="Nom", required=True)
+    particularite_ids = fields.Many2many('particularite.bien', string='Particularité')
     type_id = fields.Many2one('type.bien', string='Type de bien')
     description = fields.Text(string="Description")
     postcode = fields.Char(string="Code Postal")
@@ -28,3 +29,6 @@ class Bien(models.Model):
         string="Orientation Jardin",
         default='north'
     )
+    offers_ids = fields.One2many('offre.bien', 'property_id', string='Offres')
+    sales_id = fields.Many2one('res.users', string='Vendeur')
+    buyer_id = fields.Many2one('res.partner', string="Acheteur")

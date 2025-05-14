@@ -17,6 +17,8 @@
         #Views
         'views/bien_view.xml',
         'views/type_bien_view.xml',
+        'views/particularite_view.xml',
+        'views/actions.xml',
         'views/menu.xml',
     ],
     "installable": True,

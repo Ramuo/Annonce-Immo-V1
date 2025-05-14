@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 annonce_immo.access_bien_immobilier,access_bien_immobilier,annonce_immo.model_bien_immobilier,base.group_user,1,1,1,1
 annonce_immo.access_type_bien,access_type_bien,annonce_immo.model_type_bien,base.group_user,1,1,1,1
+annonce_immo.access_particularite_bien,access_particularite_bien,annonce_immo.model_particularite_bien,base.group_user,1,1,1,
+annonce_immo.access_offre_bien,access_offre_bien,annonce_immo.model_offre_bien,base.group_user,1,1,1,
