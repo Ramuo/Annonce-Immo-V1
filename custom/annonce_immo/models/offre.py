@@ -1,5 +1,5 @@
 from odoo import fields, models, api
-
+from datetime import timedelta
 
 
 
@@ -20,5 +20,14 @@ class OffreBien(models.Model):
     property_id = fields.Many2one('bien.immobilier', string='Bien')
 
     validity = fields.Integer(string='Validité')
-    deadline = fields.Date(string='Date Limite')
+    deadline = fields.Date(string='Date Limite', compute='_computed_deadline')
+    creation_date = fields.Date(string='Date de création')
 
+    # Computed field for deadline
+    @api.depends('validity', 'creation_date')
+    def _computed_deadline(self):
+        for rec in self:
+            if rec.creation_date and rec.validity:
+                rec.deadline = rec.creation_date + timedelta(days=rec.validity)
+            else:
+                rec.deadline = False

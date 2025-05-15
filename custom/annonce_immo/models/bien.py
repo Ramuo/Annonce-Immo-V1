@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class Bien(models.Model):
     _name = "bien.immobilier"
@@ -14,7 +14,7 @@ class Bien(models.Model):
     best_offer = fields.Float(string="Meilleure Offre")
     selling_price = fields.Float(string="Prix de Vente")
     bedrooms = fields.Integer(string="Chambres")
-    living_area = fields.Integer(string="Surface (m²)")
+    living_area = fields.Integer(string="Salon (m²)")
     facades = fields.Integer(string="Façades")
     garage = fields.Boolean(string="Garage", default=False)
     garden = fields.Boolean(string="Jardin", default=False)
@@ -32,3 +32,13 @@ class Bien(models.Model):
     offers_ids = fields.One2many('offre.bien', 'property_id', string='Offres')
     sales_id = fields.Many2one('res.users', string='Vendeur')
     buyer_id = fields.Many2one('res.partner', string="Acheteur")
+    total_erea = fields.Integer(string='Surface Total', compute='_compute_total_area')
+    
+
+    # Computed field for total area
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for rec in self :
+            rec.total_erea = rec.living_area + rec.garden_area
+    
+    
