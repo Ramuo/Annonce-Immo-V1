@@ -33,7 +33,7 @@ class Bien(models.Model):
     sales_id = fields.Many2one('res.users', string='Vendeur')
     buyer_id = fields.Many2one('res.partner', string="Acheteur")
     total_erea = fields.Integer(string='Surface Total', compute='_compute_total_area')
-    phone = fields.Char(related="buyer_id.phone", string="Téléphone")
+    phone = fields.Char(related="buyer_id.phone", string="Téléphone") 
     
 
     # Computed field for total area
@@ -45,6 +45,6 @@ class Bien(models.Model):
             else:
                 rec.total_erea = False
     
-    
+   
 
    

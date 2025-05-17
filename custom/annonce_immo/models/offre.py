@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 from datetime import timedelta
+from odoo.exceptions import ValidationError
 
 
 
@@ -41,3 +42,10 @@ class OffreBien(models.Model):
                 rec.validity = False
 
 
+     # Constraint decorator to avoid the field "validity" to have a negative value
+    @api.constrains('validity')
+    def _check_validity(self):
+        for rec in self:
+            if rec.deadline <= rec.creation_date:
+                raise ValidationError("La date limite ne doit pas être inférieure à la date de création.")
+                
