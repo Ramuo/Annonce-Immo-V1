@@ -20,7 +20,7 @@ class OffreBien(models.Model):
     property_id = fields.Many2one('bien.immobilier', string='Bien')
 
     validity = fields.Integer(string='Validité')
-    deadline = fields.Date(string='Date Limite', compute='_computed_deadline')
+    deadline = fields.Date(string='Date Limite', compute='_computed_deadline', inverse='_inverse_deadline')
     creation_date = fields.Date(string='Date de création')
 
     # Computed field for deadline
@@ -31,3 +31,13 @@ class OffreBien(models.Model):
                 rec.deadline = rec.creation_date + timedelta(days=rec.validity)
             else:
                 rec.deadline = False
+
+    # inverse decoretor for deadline
+    def _inverse_deadline(self):
+        for rec in self:
+            if rec.deadline and rec.validity:
+                rec.validity = (rec.deadline - rec.creation_date).days
+            else:
+                rec.validity = False
+
+

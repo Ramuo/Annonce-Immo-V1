@@ -39,6 +39,11 @@ class Bien(models.Model):
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
         for rec in self :
-            rec.total_erea = rec.living_area + rec.garden_area
+            if rec.living_area and rec.garden_area:
+                rec.total_erea = rec.living_area + rec.garden_area
+            else:
+                rec.total_erea = False
     
     
+
+   
