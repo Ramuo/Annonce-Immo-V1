@@ -20,6 +20,12 @@
         'views/particularite_view.xml',
         'views/actions.xml',
         'views/menu.xml',
+
+        # Data File
+        'data/type_bien.xml',
+
+        # Demo file
+        'demo/particularite_bien.xml',
     ],
     "installable": True,
     "application": True,

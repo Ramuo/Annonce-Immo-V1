@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="particularite_bien_nouveau" model="particularite.bien">
+            <field name="name">Nouveau</field>
+        </record>
+    </data>
+</odoo>

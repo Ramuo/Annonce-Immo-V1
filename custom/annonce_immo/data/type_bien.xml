@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="type_bien_maison" model="type.bien">
+            <field name="name">Maison</field>
+        </record>
+            <record id="type_bien_appartement" model="type.bien">
+            <field name="name">Appartement</field>
+        </record>
+            <record id="type_bien_terrain" model="type.bien">
+            <field name="name">Terrain</field>
+        </record>
+            <record id="type_bien_parking" model="type.bien">
+            <field name="name">Parking</field>
+        </record>
+    </data>
+</odoo>
