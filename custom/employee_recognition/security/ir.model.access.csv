@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_achievement,access_employee_achievement,employee_recognition.model_employee_achievement,base.group_user,1,1,1,1
+access_achievement_type,access_achievement_type,employee_recognition.model_achievement_type,base.group_user,1,1,1,1
+access_employee_reward,access_employee_reward,employee_recognition.model_employee_reward,base.group_user,1,1,1,1

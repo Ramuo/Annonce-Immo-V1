@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="employee_reward_tree_view" model="ir.ui.view">
+            <field name="name">employee.reward.tree</field>
+            <field name="model">employee.reward</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="required_points"/>
+                    <field name="employee_id"/>
+                </list>
+            </field>
+        </record>
+
+        
+        <record id="view_employee_reward_form" model="ir.ui.view">
+            <field name="name">employee.reward.form</field>
+            <field name="model">employee.reward</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="required_points"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <button name="redeem_reward" string="Redeem" type="object" class="oe_highlight"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

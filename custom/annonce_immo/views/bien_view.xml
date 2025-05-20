@@ -24,7 +24,19 @@
       <field name="model">bien.immobilier</field>
       <field name="arch" type="xml">
         <form string="Bien Immobilier">
+          <!-- Form Header -->
+          <header>
+            <button name="action_sold" type="object" string="Vendu" class="btn btn-primary"/>
+            <button name="action_cancel" type="object" string="Annuler" class="btn btn-danger"/>
+            <!-- <button name="" type="action" string="" class="btn btn-primary"/> -->
+            <field name="state" widget="statusbar"/>
+          </header>
           <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button" name="action_property_view_offers" type="object" icon="fa-handshake-o" help="Voire les offres">
+                <field name="offer_count" string="Offers" widget="statinfo"/>
+              </button>
+            </div>
             <group>
                 <field name="name"/>
                 <field name='particularite_ids' widget='many2many_tags' placeholder="Particularités du Bien" options="{'color_field': 'color'}"/>

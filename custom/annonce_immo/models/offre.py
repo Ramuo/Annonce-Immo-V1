@@ -11,7 +11,7 @@ class OffreBien(models.Model):
 
 
 
-
+    name = fields.Char(string="Description", compute="_compute_name")
     price = fields.Float(string='Prix')
     status = fields.Selection([
         ('accepted', 'Accepté'),
@@ -48,4 +48,13 @@ class OffreBien(models.Model):
         for rec in self:
             if rec.deadline <= rec.creation_date:
                 raise ValidationError("La date limite ne doit pas être inférieure à la date de création.")
-                
+    
+
+    #Computed field for offer name
+    @api.depends('property_id', 'partner_id')
+    def _compute_name(self):
+        for rec in self:
+            if rec.property_id and rec.partner_id:
+                rec.name = f"{rec.property_id.name} - {rec.partner_id.name}"
+            else:
+                rec.name = False

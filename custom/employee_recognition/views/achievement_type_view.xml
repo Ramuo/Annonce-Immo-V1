@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="employee_achievement_type_tree_view" model="ir.ui.view">
+            <field name="name">achievement.type.tree</field>
+            <field name="model">achievement.type</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="description"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="employee_achievement_type_form_view" model="ir.ui.view">
+            <field name="name">achievement.type.form</field>
+            <field name="model">achievement.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_achievement_type" model="ir.actions.act_window">
+            <field name="name">Achievement Type</field>
+            <field name="res_model">achievement.type</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref='employee_achievement_type_tree_view'/>
+        </record>
+    </data>
+</odoo>

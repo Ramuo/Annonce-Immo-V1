@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="offre_bien_form_view" model='ir.ui.view'>
+            <field name="name">offre.bien.form</field>
+            <field name='model'>offre.bien</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="" type="" string="" class=""/>
+                     </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="" type="" string="" icon="" class="oe_stat_button">
+                                <field name="" string="" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group></group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

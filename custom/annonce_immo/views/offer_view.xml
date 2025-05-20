@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="offre_bien_tree_view" model="ir.ui.view">
+            <field name="name">offre.bien.tree</field>
+            <field name="model">offre.bien</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="price"/>
+                    <field name="status"/>
+                    <field name="partner_id"/>
+                    <field name="property_id"/>
+                    <field name="creation_date"/>
+                    <field name="validity"/>
+                    <field name="deadline"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view -->
+        <record id="offre_bien_form_view" model="ir.ui.view">
+            <field name="name">offre.bien.form</field>
+            <field name="model">offre.bien</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="price" widget="monetary"/>
+                                <field name="status"/>
+                                <field name="partner_id"/>
+                                <field name="property_id"/>
+                            </group>
+                            <group>
+                                <field name="creation_date"/>
+                                <field name="validity"/>
+                                <field name="deadline"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

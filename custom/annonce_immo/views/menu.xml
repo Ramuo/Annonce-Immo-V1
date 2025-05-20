@@ -8,6 +8,7 @@
         <menuitem id="menu_annonces_bien_parametres" name="Paramètres">
             <menuitem id="menu_bien_type" name="Type de Bien" action="annonce_immo.action_type_bien"/>
             <menuitem id="menu_particularite" name="Particularités du Bien" action="annonce_immo.action_particularite"/>
+            <menuitem id="menu_offre" name="offres de Bien" action="annonce_immo.action_offre_bien"/>
         </menuitem>  
     </menuitem>
 </odoo>
