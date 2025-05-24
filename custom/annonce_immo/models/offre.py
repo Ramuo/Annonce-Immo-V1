@@ -21,7 +21,7 @@ class OffreBien(models.Model):
     property_id = fields.Many2one('bien.immobilier', string='Bien')
 
     validity = fields.Integer(string='Validité')
-    deadline = fields.Date(string='Date Limite', compute='_computed_deadline', inverse='_inverse_deadline')
+    deadline = fields.Date(string="Date d'échéance", compute='_computed_deadline', inverse='_inverse_deadline')
     creation_date = fields.Date(string='Date de création')
 
     # Computed field for deadline
