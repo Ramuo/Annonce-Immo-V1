@@ -80,4 +80,3 @@ class Bien(models.Model):
         }
     
 
-    

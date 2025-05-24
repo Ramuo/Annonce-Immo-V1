@@ -37,6 +37,8 @@
                                 <field name="creation_date"/>
                                 <field name="validity"/>
                                 <field name="deadline"/>
+                                <field name="partner_email" widget="email"/>
+                                <field name="partner_phone" widget="phone"/>
                             </group>
                         </group>
                     </sheet>

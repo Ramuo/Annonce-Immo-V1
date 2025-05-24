@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 
 
+
 class OffreBien(models.Model):
     _name = 'offre.bien'
     _description = 'Offres des biens'
@@ -23,6 +24,8 @@ class OffreBien(models.Model):
     validity = fields.Integer(string='Validité')
     deadline = fields.Date(string="Date d'échéance", compute='_computed_deadline', inverse='_inverse_deadline')
     creation_date = fields.Date(string='Date de création')
+    partner_email = fields.Char(related="partner_id.email", string="Email")
+    partner_phone = fields.Char(related="partner_id.phone", string="Téléphone")
 
     # Computed field for deadline
     @api.depends('validity', 'creation_date')
@@ -58,3 +61,4 @@ class OffreBien(models.Model):
                 rec.name = f"{rec.property_id.name} - {rec.partner_id.name}"
             else:
                 rec.name = False
+
