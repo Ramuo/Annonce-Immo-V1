@@ -102,6 +102,18 @@
         </pivot>
       </field>
      </record>
+     
+     <!-- GRAPH VIEW -->
+     <record id="bien_view_graph" model="ir.ui.view">
+      <field name="name">bien.immobilier.graph</field>
+      <field name="model">bien.immobilier</field>
+      <field name="arch" type="xml">
+        <graph>
+          <field name="name"/>
+          <field name="selling_price"/>
+        </graph>
+      </field>
+     </record>
     
     <!-- FORM VIEW -->
     <record id="bien_view_form" model="ir.ui.view">
