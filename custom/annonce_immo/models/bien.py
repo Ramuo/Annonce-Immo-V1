@@ -42,6 +42,7 @@ class Bien(models.Model):
     total_erea = fields.Integer(string='Surface Total', compute='_compute_total_area')
     phone = fields.Char(related="buyer_id.phone", string="Téléphone") 
     offer_count = fields.Integer(string="Nbre Offre", compute="_compute_offer_count")
+    
 
     # Computed field for total area
     @api.depends('living_area', 'garden_area')
