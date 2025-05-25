@@ -88,6 +88,20 @@
       </field>
     </record>
 
+    <!-- PIVOT VIEW -->
+     <record id="bien_view_pivot" model="ir.ui.view">
+      <field name="name">bien.immobilier.pivot</field>
+      <field name="model">bien.immobilier</field>
+      <field name="arch" type="xml">
+        <pivot>
+          <field name="name" type="row"/>
+          <field name="selling_price" type="measure"/>
+          <field name="expected_price" type="measure"/>
+          <field name="facades" type="measure"/>
+          <field name="bedrooms" type="measure"/>
+        </pivot>
+      </field>
+     </record>
     
     <!-- FORM VIEW -->
     <record id="bien_view_form" model="ir.ui.view">
