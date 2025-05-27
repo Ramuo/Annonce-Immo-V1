@@ -7,13 +7,13 @@
             <field name="name">offre.bien.tree</field>
             <field name="model">offre.bien</field>
             <field name="arch" type="xml">
-                <list>
-                    <field name="price"/>
-                    <field name="status"/>
+                <list >
+                    <field name="creation_date"/>
                     <field name="partner_id"/>
                     <field name="property_id"/>
-                    <field name="creation_date"/>
+                    <field name="price" widget="monatary"/>
                     <field name="validity"/>
+                    <field name="status" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'"/>
                     <field name="deadline"/>
                 </list>
             </field>
@@ -34,7 +34,7 @@
                                 <field name="property_id"/>
                             </group>
                             <group>
-                                <field name="creation_date"/>
+                                <field name="creation_date" readonly="1"/>
                                 <field name="validity"/>
                                 <field name="deadline"/>
                                 <field name="partner_email" widget="email"/>

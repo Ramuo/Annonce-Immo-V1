@@ -159,7 +159,7 @@
                 <group>
                     <field name="expected_price"/>
                     <field name="best_offer"/>
-                    <field name="selling_price"/>
+                    <field name="selling_price" readonly="1"/>
                 </group>
             </group>
             <!-- Notebook -->
@@ -182,12 +182,14 @@
               <page string="Offers">
                 <field name="offers_ids">
                   <list editable="bottom">
-                    <field name='price'/>
+                    <field name="creation_date" />
                     <field name='partner_id'/>
-                    <field name="creation_date"/>
+                    <field name='price'/>
                     <field name='validity'/>
                     <field name='deadline' widget="remaining_days"/>
-                    <field name='status'/>
+                    <field name='status' nolabel="" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'"/>
+                    <button class="btn btn-success" name="action_accept_offer" type="object" icon="fa-check"/>
+                    <button class="btn btn-danger" name="action_refuse_offer" type="object" icon="fa-times"/>
                   </list>
                 </field>
               </page>

@@ -20,12 +20,18 @@ class OffreBien(models.Model):
     ], string='Statut')
     partner_id = fields.Many2one('res.partner', string='Client')
     property_id = fields.Many2one('bien.immobilier', string='Bien')
-
+    # creation_date = fields.Date(string='Date de création', default=fields.Date.today)
     validity = fields.Integer(string='Validité')
     deadline = fields.Date(string="Date d'échéance", compute='_computed_deadline', inverse='_inverse_deadline')
-    creation_date = fields.Date(string='Date de création')
     partner_email = fields.Char(related="partner_id.email", string="Email")
     partner_phone = fields.Char(related="partner_id.phone", string="Téléphone")
+    
+    #Function to set a default create date
+    @api.model
+    def _set_create_date(self):
+        return fields.Date.today()
+    
+    creation_date = fields.Date(string='Date de création', default=_set_create_date)
 
     # Computed field for deadline
     @api.depends('validity', 'creation_date')
@@ -62,3 +68,32 @@ class OffreBien(models.Model):
             else:
                 rec.name = False
 
+
+
+    #Action accept offer
+    def action_accept_offer(self):
+        self._validate_accepted_offer()
+        if self.property_id:
+            self.property_id.write({
+                'selling_price': self.price,
+                'state': "accepted"
+            }) 
+        self.status = "accepted"
+    
+    #To Validate accepted offer and avoid accepting more than one offer
+    def _validate_accepted_offer(self):
+        offer_ids = self.env['offre.bien'].search([
+            ('property_id', '=', self.property_id.id),
+            ('status', '=', 'accepted')
+        ])
+        if offer_ids:
+            raise ValidationError("Vous avez déjà accepté un offre")
+
+    #Action to refuse offer
+    def action_refuse_offer(self):
+        self.status = "refused"
+        if all(self.property_id.offers_ids.mapped('status')):
+            self.property_id.write({
+                'selling_price': 0,
+                'state': 'received'
+            })

@@ -8,7 +8,7 @@ class Bien(models.Model):
     state = fields.Selection([
         ('new', 'Nouveau'),
         ('received', 'Offre réçus'),
-        ('acepted', 'Offre accepté'),
+        ('accepted', 'Offre accepté'),
         ('sold', 'Vendu'),
         ('cancel', 'Annulé'),
     ], default='new', string='Statut')
@@ -18,7 +18,7 @@ class Bien(models.Model):
     postcode = fields.Char(string="Code Postal")
     date_availability = fields.Date(string="Disponible Le")
     expected_price = fields.Float(string="Prix Attendu")
-    best_offer = fields.Float(string="Meilleure Offre")
+    best_offer = fields.Float(string="Meilleure Offre", compute="_compute_best_offer")
     selling_price = fields.Float(string="Prix de Vente")
     bedrooms = fields.Integer(string="Chambres")
     living_area = fields.Integer(string="Salon (m²)")
@@ -80,4 +80,11 @@ class Bien(models.Model):
             'context': {'default_property_id': self.id},
         }
     
-
+    #Compute fiel for best offer
+    @api.depends('offers_ids')
+    def _compute_best_offer(self):
+        for rec in self:
+            if rec.offers_ids:
+                rec.best_offer = max(rec.offers_ids.mapped('price'))
+            else:
+                rec.best_offer = 0
