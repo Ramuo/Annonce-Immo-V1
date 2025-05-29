@@ -14,6 +14,7 @@
     "data": [
         #Security
         'security/ir.model.access.csv',
+        'security/res_groups.xml',
         #Views
         'views/bien_view.xml',
         'views/type_bien_view.xml',
