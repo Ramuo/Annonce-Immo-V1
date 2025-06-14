@@ -11,7 +11,7 @@
     <record id="group_bien_user" model="res.groups">
         <field name="name">Utilisateur: gère ses biens</field>
         <field name="category_id" ref="annonce_immo.module_category_annnoce_immo"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/> 
         <field name="users" eval="[Command.link(ref('base.user_demo'))]"/>
     </record>
 
@@ -22,3 +22,10 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 </odoo>
+
+
+
+<!-- NOTE
+    1- category_id = allow to ref the group id 
+    2- implied_ids = allows to implement hierarchy which take a python expression that is 4 and the group refference
+-->

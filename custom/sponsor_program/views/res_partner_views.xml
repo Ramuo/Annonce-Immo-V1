@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="view_partner_form_sponsorship_buttons" model="ir.ui.view">
+            <field name="name">res.partner.form.sponsorship.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_sponsored_contacts" type="object" class="oe_stat_button" icon="fa-users">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sponsored_count" nolabel="1"/>
+                            </span>
+                            <span class="o_stat_text">Parrainer</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Custom Popup Form for Sponsored Contact Creation -->
+        <record id="view_partner_form_sponsored_popup" model="ir.ui.view">
+            <field name="name">res.partner.sponsored.popup.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form string="Nouveau Parrainé">
+                    <sheet>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="company_type"/>
+                            <field name="parent_id"/>
+                            <field name="street"/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                            <field name="country_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

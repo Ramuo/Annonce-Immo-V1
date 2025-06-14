@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="view_sponsor_create_sponsored_form" model="ir.ui.view">
+            <field name="name">sponsor.wizard.create.sponsored.form</field>
+            <field name="model">sponsor.wizard.create.sponsored</field>
+            <field name="arch" type="xml">
+                <form string="Nouveau Contact Parrainé">
+                    <group>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                    </group>
+                    <footer>
+                        <button name="action_create_contact" type="object" string="Create" class="btn-primary"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

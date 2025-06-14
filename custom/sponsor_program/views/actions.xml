@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<odoo>
+    <data>
+        <!-- Sponsorship relation -->
+        <record id="action_sponsorship_relationship" model="ir.actions.act_window">
+            <field name="name">Parrainage</field>
+            <field name="res_model">sponsorship.relationship</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Action to create contaxt wizard -->
+        <record id="action_create_contact_wizard" model="ir.actions.act_window">
+            <field name="name">Créer contact</field>
+            <field name="res_model">sponsor.wizard.create.sponsored</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
