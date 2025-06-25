@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 class SponsorshipRelationship(models.Model):
     _name = 'sponsorship.relationship'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin'] 
     _description = 'Sponsorship Relation'
     _rec_name = 'display_name'
     _rec_name = 'sponsor_id'
@@ -21,8 +22,20 @@ class SponsorshipRelationship(models.Model):
     sponsored_street = fields.Char(related="sponsored_id.street", string="Rue")
     sponsor_city = fields.Char(related="sponsor_id.city", string="Ville")
     sponsored_city = fields.Char(related="sponsored_id.city", string="Ville")
+
     description = fields.Text()
     sales_id = fields.Many2one('res.users', string="Vendeur")
+    lead_id = fields.Many2one('crm.lead', string='Lead associé', readonly=True)
+    # points_granted = fields.Boolean(string="Points attribués", default=False)
+    points_awarded = fields.Integer(string="Points attribués", default=10)
+    state = fields.Selection([
+        ('draft', 'Brouillon'),
+        ('confirmed', 'Confirmé'),
+        ('cancelled', 'Annulé'),
+    ], default='draft', string="Statut")
+    date_confirmed = fields.Datetime(string="Date de confirmation")
+
+
 
     display_name = fields.Char(string="Détails", compute='_compute_display_name', store=True)
     #Compute field for display_name
@@ -56,6 +69,37 @@ class SponsorshipRelationship(models.Model):
             if reverse:
                 raise ValidationError("Le parrainage inverse n'est pas autorisé")
 
+    def action_confirm(self):
+        for rel in self:
+            rel.state = 'confirmed'
+            rel.date_confirmed = fields.Datetime.now()
+
+    def action_cancel(self):
+        for rel in self:
+            rel.state = 'cancelled'
+
+
+
+    # Auto-create CRM lead when a sponsored person is added
+    @api.model
+    def create(self, vals):
+        rec = super().create(vals)
+        if rec.sponsored_id:
+            lead = self.env['crm.lead'].create({
+                'name': f"Nouveau prospect parrainé: {rec.sponsored_id.name}",
+                'partner_id': rec.sponsored_id.id,
+                "contact_name": rec.sponsored_id.name,
+                'email_from': rec.sponsored_id.email,
+                'phone': rec.sponsored_id.phone or rec.sponsored_id.mobile,
+                'description': f"Contact parrainé par {rec.sponsor_id.name}",
+                # 'sponsor': rec.sponsored_id.email,
+            })
+            rec.lead_id = lead.id 
+        return rec          
+    
+
+
+    ##################################FILTRE#################################################""""
     # Date for filtering and grouping
     date_created = fields.Date(string='Date (filtrage)', compute='_compute_date_only', store=True, index=True)
 

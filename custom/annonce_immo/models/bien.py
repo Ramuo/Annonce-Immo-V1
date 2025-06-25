@@ -2,6 +2,7 @@ from odoo import models, fields, api
 
 class Bien(models.Model):
     _name = "bien.immobilier"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Annonce de Biens Immobiliers"
 
     name = fields.Char(string="Nom", required=True)

@@ -10,7 +10,7 @@
     "company": "Miandano",
     "website": "https://www.website.com",
     "category": "Sales",
-    "depends": ['base'],
+    "depends": ['base', "mail"],
     "data": [
         #Security
         'security/ir.model.access.csv',

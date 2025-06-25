@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <menuitem id="menu_employee_recognition" name="Employee Recognition" sequence="10"
-    web_icon="employee_recognition,static/description/trophy.png"/>
+    web_icon="employee_recognition,static/description/icon.png"/>
 
     <menuitem id="menu_ach_custom" name="Achievements" parent="menu_employee_recognition" action="action_employee_achievement" sequence="11"/>
     

@@ -159,7 +159,7 @@
                 <group>
                     <field name="expected_price"/>
                     <field name="best_offer"/>
-                    <field name="selling_price" readonly="1"/>
+                    <field name="selling_price" readonly="1"/> 
                 </group>
             </group>
             <!-- Notebook -->
@@ -203,6 +203,7 @@
               </page> 
             </notebook>
           </sheet>
+          <chatter/>
         </form>
       </field>
     </record>

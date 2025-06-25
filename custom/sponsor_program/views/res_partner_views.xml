@@ -44,5 +44,53 @@
                 </form>
             </field>
         </record>
+
+        <!--Ajoute ce bloc dans la vue form de res.partner  -->
+        <record id="view_partner_form_sponsorship" model="ir.ui.view">
+            <field name="name">res.partner.form.sponsorship</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Parrainage">
+                        <group>
+                            <field name="sponsored_count" readonly="1"/>
+                            <field name="total_earned_points" readonly="1"/>
+                            <field name="total_redeemed_points" readonly="1"/>
+                            <field name="available_points" readonly="1"/>
+                        </group>
+
+                        <group string="Filleuls parrainés">
+                            <field name="sponsored_ids">
+                            <list editable="bottom">
+                                <field name="sponsored_id"/>
+                                <field name="points_awarded"/>
+                                <field name="state"/>
+                            </list>
+                            </field>
+                        </group>
+
+                        <group string="Récompenses">
+                            <field name="sponsorship_redemption_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="required_points"/>
+                                    <field name="state"/>
+                                    <field name="approver_id"/>
+                                </list>
+                            </field>
+                        </group>
+                        <!-- <group>
+                            <group string="Points et Récompenses">
+                                <field name="sponsored_count" readonly="1"/>
+                                <field name="total_earned_points" readonly="1"/>
+                                <field name="total_redeemed_points" readonly="1"/>
+                                <field name="available_points" readonly="1"/>
+                            </group>
+                        </group> -->
+                    </page>
+                </notebook>
+            </field>
+        </record>
     </data>
 </odoo>

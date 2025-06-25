@@ -12,13 +12,16 @@
     'category': 'Sales', 
     'author': 'Alpha',
     'website': 'http://www.odooalpha.com',
-    'depends': ['base', 'sale_management', 'contacts', 'mail'],
+    'depends': ['base', 'sale_management', 'contacts', 'mail', 'crm'],
     'data': [
         # Security
         'security/ir.model.access.csv',
+        'security/res_groups.xml',
+        #Views
         'views/sponsorship_relationship_views.xml',
         'views/res_partner_views.xml',
         'views/sponsor_wizard_views.xml',
+        'views/sponsorship_redemption_views.xml',
         'views/actions.xml',
         'views/menus.xml',
     ], 

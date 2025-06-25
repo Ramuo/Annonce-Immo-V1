@@ -12,6 +12,8 @@
                     <field name="sponsor_id"/>
                     <field name="sponsored_id"/>
                     <field name="sales_id"/>
+                    <field name="points_awarded"/>
+                    <field name="state"/>
                 </list>
             </field>
         </record>
@@ -49,10 +51,16 @@
             <field name="model">sponsorship.relationship</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <!-- Statusbar Field -->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancelled"/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="sponsor_id" />
+                                <field name="points_awarded"/>
+                                <field name="state"/>
                                 <field name="sponsor_email" widget="email"/>
                                 <field name="sponsor_street"/>
                                 <field name="sponsor_city"/>
@@ -75,11 +83,20 @@
                             </page>
                             <page string="Informations Supplémentaires">
                                 <group>
-                                    <field name="sales_id" widget="many2one_avatar_user"/>
+                                    <group>
+                                        <field name="campaign_id"/>
+                                        <field name="source_id"/>
+                                        <field name="medium_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="sales_id" widget="many2one_avatar_user"/>
+                                        <field name="lead_id" readonly="1" options="{'no_open': False}" context="{'form_view_ref': 'crm.crm_case_form_view_leads'}"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>
                     </sheet>
+                    <chatter/>
                 </form>
             </field>
         </record>

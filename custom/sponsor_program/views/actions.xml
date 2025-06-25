@@ -17,5 +17,12 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+
+        <!-- Action for sponsorship redemption -->
+        <record id="action_sponsorship_redemption" model="ir.actions.act_window">
+            <field name="name">Recompense</field>
+            <field name="res_model">sponsorship.redemption</field>
+            <field name="view_mode">list,form</field>
+        </record> 
     </data>
 </odoo>

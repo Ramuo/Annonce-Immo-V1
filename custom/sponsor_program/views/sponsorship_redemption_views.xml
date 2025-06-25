@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_sponsorship_redemption_tree" model="ir.ui.view">
+            <field name="name">sponsorship.redemption.tree</field>
+            <field name="model">sponsorship.redemption</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="date"/>
+                    <field name="sponsor_id"/>
+                    <field name="required_points"/>
+                    <field name="state" readonly="1"/> 
+                    <field name="approver_id" readonly="1"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_sponsorship_redemption_form" model="ir.ui.view">
+            <field name="name">sponsorship.redemption.form</field>
+            <field name="model">sponsorship.redemption</field>
+            <field name="arch" type="xml">
+                <form string="Redemption Request">
+                    <header>
+                        <!-- Submit Button: visible only in 'draft' -->
+                        <button name="action_submit_for_approval"
+                                type="object"
+                                string="Soumettre pour approbation"
+                                class="btn btn-primary"
+                                invisible="state != 'draft'"/>
+
+                        <!-- Approve Button: visible only in 'pending' -->
+                        <button name="action_approve"
+                                type="object"
+                                string="Approuver"
+                                class="btn btn-primary"
+                                invisible="state != 'pending'"/>
+
+                        <!-- Reject Button: visible only in 'pending' -->
+                        <button name="action_reject"
+                                type="object"
+                                string="Rejeter"
+                                class="btn btn-danger"
+                                invisible="state != 'pending'"/>
+
+                        <!-- Statusbar Field -->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sponsor_id"/>
+                                <field name="state" readonly="1"/>
+                                <field name="date"/>
+                                <field name="required_points"/>
+                            </group>
+                            <group>
+                                <field name="reason"/>
+                                <field name="approver_id" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

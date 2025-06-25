@@ -3,10 +3,11 @@
 
 <odoo>
     <!-- Root Menu -->
-    <menuitem id="menu_sponsorship_root" name="Parrainage" sequence="10" web_icon="sponsor_program,static/description/deal.png"/> 
+    <menuitem id="menu_sponsorship_root" name="Parrainage" sequence="10" web_icon="sponsor_program,static/description/icon.png"/> 
 
     <!-- Submenus -->
     <menuitem id="menu_sponsorship_main" name="Parrain" parent="menu_sponsorship_root" action="action_sponsorship_relationship" sequence="1"/> 
+    <menuitem id="menu_sponsorship_redemption" name="Recompense" parent="menu_sponsorship_root" action="action_sponsorship_redemption" sequence="2"/> 
     <menuitem id="menu_create_contact" name="Créer contact" parent="menu_sponsorship_root" action="action_create_contact_wizard"/>
 
     
