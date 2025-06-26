@@ -13,7 +13,7 @@
                     <field name="sponsored_id"/>
                     <field name="sales_id"/>
                     <field name="points_awarded"/>
-                    <field name="state"/>
+                    <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
                 </list>
             </field>
         </record>
@@ -52,6 +52,8 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="action_confirm" string="Confirmer" type="object" class="btn-primary" invisible="state == 'confirmed'"/>
+                        <button name="action_cancel" string="Annulé" type="object" class="btn-danger" invisible="state != 'confirmed'"/>
                         <!-- Statusbar Field -->
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancelled"/>
                     </header>
@@ -60,18 +62,12 @@
                             <group>
                                 <field name="sponsor_id" />
                                 <field name="points_awarded"/>
-                                <field name="state"/>
                                 <field name="sponsor_email" widget="email"/>
-                                <field name="sponsor_street"/>
-                                <field name="sponsor_city"/>
                             </group> 
                             <group>
                                 <field name="sponsored_id" />
                                 <field name="datetime_created"/> 
                                 <field name="sponsored_email" widget="email"/>
-                                <field name="sponsored_street"/>
-                                <field name="sponsored_city"/>
-                                <field name="display_name"/>
                             </group>
                         </group>
                         <!-- Notebook section -->
@@ -91,6 +87,13 @@
                                     <group>
                                         <field name="sales_id" widget="many2one_avatar_user"/>
                                         <field name="lead_id" readonly="1" options="{'no_open': False}" context="{'form_view_ref': 'crm.crm_case_form_view_leads'}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Récompense">
+                                <group>
+                                    <group>
+                                        <field name="redemption_ids" readonly="1"/>
                                     </group>
                                 </group>
                             </page>

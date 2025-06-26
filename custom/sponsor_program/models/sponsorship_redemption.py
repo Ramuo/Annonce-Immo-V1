@@ -12,6 +12,7 @@ class SponsorshipRedemption(models.Model):
     _order = 'date desc'
 
     sponsor_id = fields.Many2one('res.partner', string='Parrain', required=True)
+    sponsored_id = fields.Many2one('res.partner', string='Filleul')
     date = fields.Datetime(default=fields.Datetime.now, readonly=True)
     required_points = fields.Integer(string="Points", required=True, tracking=True)
     reason = fields.Char(string='Raison')
@@ -22,6 +23,9 @@ class SponsorshipRedemption(models.Model):
         ('rejected', 'Rejeté'),
     ], default='draft', tracking=True)
     approver_id = fields.Many2one('res.users', string='Approbateur', tracking=True)
+    sponsorship_id = fields.Many2one('sponsorship.relationship', string="Parrainage d'origine", ondelete='set null')
+    
+
 
     @api.model
     def create(self, vals):
@@ -104,6 +108,12 @@ class SponsorshipRedemption(models.Model):
 
     def unlink(self):
         for record in self:
-            if record.state != 'approved':
-                _logger.info("🔁 Suppression de la demande : %s (non approuvée)", record.id)
+            if record.state == 'approved':
+                raise ValidationError(_("Une récompense approuvée ne peut pas être supprimée."))
+            elif record.state == 'pending':
+                raise ValidationError(_("Cette récompense est en attente d'approbation et ne peut pas être supprimée. Veuillez d'abord la rejeter."))
+            elif record.state == 'draft':
+                _logger.info("Suppression de la récompense brouillon : %s", record.id)
+            elif record.state == 'rejected':
+                _logger.info("Suppression de la récompense rejetée : %s", record.id)
         return super().unlink()

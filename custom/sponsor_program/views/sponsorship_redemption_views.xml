@@ -10,8 +10,9 @@
                 <list>
                     <field name="date"/>
                     <field name="sponsor_id"/>
+                    <field name="sponsored_id"/>
                     <field name="required_points"/>
-                    <field name="state" readonly="1"/> 
+                    <field name="state" readonly="1" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/> 
                     <field name="approver_id" readonly="1"/>
                 </list>
             </field>
@@ -58,6 +59,8 @@
                                 <field name="required_points"/>
                             </group>
                             <group>
+                                <field name="sponsored_id"/>
+                                <field name="sponsorship_id" readonly="1"/>
                                 <field name="reason"/>
                                 <field name="approver_id" readonly="1"/>
                             </group>

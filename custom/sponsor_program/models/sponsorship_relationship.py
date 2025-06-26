@@ -1,8 +1,10 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError
-
 from dateutil.relativedelta import relativedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class SponsorshipRelationship(models.Model):
@@ -14,19 +16,15 @@ class SponsorshipRelationship(models.Model):
 
 
     sponsor_id = fields.Many2one('res.partner', string="Parrain", required=True)
-    sponsored_id = fields.Many2one('res.partner', string="Parrainé", required=True)
+    sponsored_id = fields.Many2one('res.partner', string="Filleul", required=True)
     datetime_created = fields.Datetime(string='Date de création', default=fields.Datetime.now, readonly=True)
     sponsor_email = fields.Char(related='sponsor_id.email', string="E-mail parrain", store=True)
-    sponsored_email = fields.Char(related='sponsored_id.email', string="E-mail parrainé", store=True)
-    sponsor_street = fields.Char(related="sponsor_id.street", string="Rue")
-    sponsored_street = fields.Char(related="sponsored_id.street", string="Rue")
-    sponsor_city = fields.Char(related="sponsor_id.city", string="Ville")
-    sponsored_city = fields.Char(related="sponsored_id.city", string="Ville")
+    sponsored_email = fields.Char(related='sponsored_id.email', string="E-mail filleul", store=True)
+   
 
     description = fields.Text()
     sales_id = fields.Many2one('res.users', string="Vendeur")
     lead_id = fields.Many2one('crm.lead', string='Lead associé', readonly=True)
-    # points_granted = fields.Boolean(string="Points attribués", default=False)
     points_awarded = fields.Integer(string="Points attribués", default=10)
     state = fields.Selection([
         ('draft', 'Brouillon'),
@@ -34,6 +32,8 @@ class SponsorshipRelationship(models.Model):
         ('cancelled', 'Annulé'),
     ], default='draft', string="Statut")
     date_confirmed = fields.Datetime(string="Date de confirmation")
+    redemption_ids = fields.One2many('sponsorship.redemption', 'sponsorship_id', string="Récompense liée")
+
 
 
 
@@ -71,12 +71,75 @@ class SponsorshipRelationship(models.Model):
 
     def action_confirm(self):
         for rel in self:
-            rel.state = 'confirmed'
-            rel.date_confirmed = fields.Datetime.now()
+            if rel.state != 'confirmed':
+                rel.state = 'confirmed'
+                rel.date_confirmed = fields.Datetime.now()
+
+                # Vérifier si une récompense liée existe déjà
+                existing_redemption = self.env['sponsorship.redemption'].search([
+                    ('sponsorship_id', '=', rel.id)
+                ], limit=1)
+
+                if not existing_redemption:
+                    self.env['sponsorship.redemption'].create({
+                        'sponsor_id': rel.sponsor_id.id,
+                        'sponsored_id': rel.sponsored_id.id,  
+                        'required_points': rel.points_awarded,
+                        'reason': _('Récompense automatique pour le parrainage de %s') % rel.sponsored_id.name,
+                        'state': 'pending',  
+                        'sponsorship_id': rel.id,
+                    })
+
 
     def action_cancel(self):
         for rel in self:
+            # Vérifier s'il existe une récompense approuvée liée à ce parrainage
+            has_approved_redemption = self.env['sponsorship.redemption'].search_count([
+                ('sponsorship_id', '=', rel.id),
+                ('state', '=', 'approved')
+            ]) > 0
+
+            if has_approved_redemption:
+                raise ValidationError(_("Impossible d'annuler ce parrainage : une récompense a été approuvée pour ce parrainage."))
+
+            # Rejeter automatiquement la récompense associée en attente
+            pending_redemption = self.env['sponsorship.redemption'].search([
+                ('sponsorship_id', '=', rel.id),
+                ('state', '=', 'pending')
+            ], limit=1)
+
+            if pending_redemption:
+                pending_redemption.state = 'rejected'
+                pending_redemption.message_post(body=_("Récompense rejetée automatiquement suite à l'annulation du parrainage."))
+
             rel.state = 'cancelled'
+
+
+    
+    def unlink(self):
+        for record in self:
+            has_approved_redemption = self.env['sponsorship.redemption'].search_count([
+                ('sponsorship_id', '=', record.id),
+                ('state', '=', 'approved')
+            ]) > 0
+
+            if record.state == 'confirmed' and has_approved_redemption:
+                raise ValidationError(_("Ce parrainage ne peut pas être supprimé car une récompense approuvée a été générée."))
+
+            if record.state == 'confirmed':
+                raise ValidationError(_("Impossible de supprimer le parrainage confirmé entre %s et %s. Il faut d'abord l'annuler.") %
+                                    (record.sponsor_id.name, record.sponsored_id.name))
+
+            if record.state in ('draft', 'cancelled'):
+                _logger.info("Suppression du parrainage (%s) entre %s et %s", record.state, record.sponsor_id.name, record.sponsored_id.name)
+
+                #Supprimer les récompenses associées en attente ou rejetées
+                self.env['sponsorship.redemption'].search([
+                    ('sponsorship_id', '=', record.id),
+                    ('state', 'in', ['pending', 'rejected'])
+                ]).unlink()
+
+        return super().unlink()
 
 
 
