@@ -15,13 +15,13 @@ class SponsorshipRelationship(models.Model):
     _rec_name = 'sponsor_id'
 
 
+    display_name = fields.Char(string="Nom", compute='_compute_display_name', store=True)
     sponsor_id = fields.Many2one('res.partner', string="Parrain", required=True)
     sponsored_id = fields.Many2one('res.partner', string="Filleul", required=True)
     datetime_created = fields.Datetime(string='Date de création', default=fields.Datetime.now, readonly=True)
     sponsor_email = fields.Char(related='sponsor_id.email', string="E-mail parrain", store=True)
     sponsored_email = fields.Char(related='sponsored_id.email', string="E-mail filleul", store=True)
    
-
     description = fields.Text()
     sales_id = fields.Many2one('res.users', string="Vendeur")
     lead_id = fields.Many2one('crm.lead', string='Lead associé', readonly=True)
@@ -33,41 +33,47 @@ class SponsorshipRelationship(models.Model):
     ], default='draft', string="Statut")
     date_confirmed = fields.Datetime(string="Date de confirmation")
     redemption_ids = fields.One2many('sponsorship.redemption', 'sponsorship_id', string="Récompense liée")
-
-
-
-
-    display_name = fields.Char(string="Détails", compute='_compute_display_name', store=True)
+    
     #Compute field for display_name
     @api.depends('sponsor_id', 'sponsored_id')
     def _compute_display_name(self):
         for rec in self:
-            rec.display_name = f"{rec.sponsor_id.name} → {rec.sponsored_id.name}"
+            rec.display_name = f"{rec.sponsor_id.name} → {rec.sponsored_id.name}" 
     
     # Constrains for sponsorship
     @api.constrains('sponsor_id', 'sponsored_id')
     def _check_unique_sponsorship(self):
         for rec in self:
-            #Prevent self-sponsorship
+            # Auto-parrainage
             if rec.sponsor_id == rec.sponsored_id:
                 raise ValidationError("Le parrain et le parrainé ne peuvent pas être la même personne.") 
 
-            #Prevent duplicate sponsorships
+            # Le filleul a déjà été parrainé par quelqu'un d'autre
+            duplicate_filleul = self.search([
+                ('sponsored_id', '=', rec.sponsored_id.id),
+                ('id', '!=', rec.id)
+            ])
+            if duplicate_filleul:
+                raise ValidationError(
+                    _("Ce contact a déjà été parrainé par %s.") % duplicate_filleul[0].sponsor_id.name
+                )
+
+            # Lien exact déjà existant
             existing = self.search([
                 ('sponsor_id', '=', rec.sponsor_id.id),
                 ('sponsored_id', '=', rec.sponsored_id.id),
-                ('id', '!=', rec.id)  # Exclude current record in update context
+                ('id', '!=', rec.id)
             ])
             if existing:
                 raise ValidationError("Ce lien de parrainage existe déjà !")
 
-            #Prevent reverse sponsorship (B sponsoring A if A already sponsored B)
+            # Parrainage croisé (A parrainé B et B essaie de parrainer A)
             reverse = self.search([
                 ('sponsor_id', '=', rec.sponsored_id.id),
                 ('sponsored_id', '=', rec.sponsor_id.id)
             ])
             if reverse:
-                raise ValidationError("Le parrainage inverse n'est pas autorisé")
+                raise ValidationError("Le parrainage inverse n'est pas autorisé.")
 
     def action_confirm(self):
         for rel in self:
@@ -85,12 +91,12 @@ class SponsorshipRelationship(models.Model):
                         'sponsor_id': rel.sponsor_id.id,
                         'sponsored_id': rel.sponsored_id.id,  
                         'required_points': rel.points_awarded,
-                        'reason': _('Récompense automatique pour le parrainage de %s') % rel.sponsored_id.name,
+                        'reason': _('Récompense en attente pour le parrainage de %s') % rel.sponsored_id.name,
                         'state': 'pending',  
                         'sponsorship_id': rel.id,
                     })
 
-
+    #To Cancel sponsorship
     def action_cancel(self):
         for rel in self:
             # Vérifier s'il existe une récompense approuvée liée à ce parrainage
@@ -112,10 +118,12 @@ class SponsorshipRelationship(models.Model):
                 pending_redemption.state = 'rejected'
                 pending_redemption.message_post(body=_("Récompense rejetée automatiquement suite à l'annulation du parrainage."))
 
+            rel.points_awarded = 0
             rel.state = 'cancelled'
+            rel.message_post(body=_("Parrainage annulé. Points remis à zéro. Récompense associée rejetée si existante."))
 
 
-    
+    #To delete Sponsorship
     def unlink(self):
         for record in self:
             has_approved_redemption = self.env['sponsorship.redemption'].search_count([
@@ -141,24 +149,30 @@ class SponsorshipRelationship(models.Model):
 
         return super().unlink()
 
-
-
-    # Auto-create CRM lead when a sponsored person is added
+    # Auto-create lead in CRM, when a sponsored a new person is added and if does not exist
     @api.model
     def create(self, vals):
         rec = super().create(vals)
-        if rec.sponsored_id:
-            lead = self.env['crm.lead'].create({
-                'name': f"Nouveau prospect parrainé: {rec.sponsored_id.name}",
-                'partner_id': rec.sponsored_id.id,
-                "contact_name": rec.sponsored_id.name,
-                'email_from': rec.sponsored_id.email,
-                'phone': rec.sponsored_id.phone or rec.sponsored_id.mobile,
-                'description': f"Contact parrainé par {rec.sponsor_id.name}",
-                # 'sponsor': rec.sponsored_id.email,
-            })
-            rec.lead_id = lead.id 
-        return rec          
+
+        if rec.sponsored_id and rec.sponsored_id.email:
+            existing_lead = self.env['crm.lead'].search([
+                ('email_from', '=', rec.sponsored_id.email)
+            ], limit=1)
+
+            if not existing_lead:
+                lead = self.env['crm.lead'].create({
+                    'name': f"Nouveau prospect parrainé: {rec.sponsored_id.name}",
+                    'partner_id': rec.sponsored_id.id,
+                    'contact_name': rec.sponsored_id.name,
+                    'email_from': rec.sponsored_id.email,
+                    'phone': rec.sponsored_id.phone or rec.sponsored_id.mobile,
+                    'description': f"Contact parrainé par {rec.sponsor_id.name}",
+                })
+                rec.lead_id = lead.id
+            else:
+                rec.message_post(body=_("Un prospect existe déjà avec l’email %s, aucun nouveau lead créé.") % rec.sponsored_id.email)
+        return rec
+       
     
 
 

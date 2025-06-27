@@ -60,12 +60,12 @@
                             <field name="available_points" readonly="1"/>
                         </group>
 
-                        <group string="Filleuls parrainés">
+                        <group string="Filleuls">
                             <field name="sponsored_ids">
                             <list editable="bottom">
                                 <field name="sponsored_id"/>
                                 <field name="points_awarded"/>
-                                <field name="state"/>
+                                <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
                             </list>
                             </field>
                         </group>
@@ -75,7 +75,7 @@
                                 <list editable="bottom">
                                     <field name="date"/>
                                     <field name="required_points"/>
-                                    <field name="state"/>
+                                    <field name="state" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
                                     <field name="approver_id"/>
                                 </list>
                             </field>

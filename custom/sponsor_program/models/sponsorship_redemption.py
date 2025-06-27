@@ -11,10 +11,11 @@ class SponsorshipRedemption(models.Model):
     _description = 'Sponsorship Points Redemption'
     _order = 'date desc'
 
+    name = fields.Char(string="Nom", compute='_compute_name', store=True)
     sponsor_id = fields.Many2one('res.partner', string='Parrain', required=True)
     sponsored_id = fields.Many2one('res.partner', string='Filleul')
     date = fields.Datetime(default=fields.Datetime.now, readonly=True)
-    required_points = fields.Integer(string="Points", required=True, tracking=True)
+    required_points = fields.Integer(string="Points", required=True, tracking=True, readonly=True)
     reason = fields.Char(string='Raison')
     state = fields.Selection([
         ('draft', 'Brouillon'),
@@ -26,7 +27,13 @@ class SponsorshipRedemption(models.Model):
     sponsorship_id = fields.Many2one('sponsorship.relationship', string="Parrainage d'origine", ondelete='set null')
     
 
+    #Compute field for display_name
+    @api.depends('sponsor_id')
+    def _compute_name(self):
+        for rec in self:
+            rec.name = f"{rec.sponsor_id.name}"
 
+    #To create redemption
     @api.model
     def create(self, vals):
         return super().create(vals)
@@ -56,6 +63,7 @@ class SponsorshipRedemption(models.Model):
             if template:
                 template.send_mail(record.id, force_send=True)
 
+    #To approve redemption
     def action_approve(self):
         for record in self:
             if record.required_points < 10:
@@ -72,15 +80,17 @@ class SponsorshipRedemption(models.Model):
                 ) % (sponsor.name, current_available, record.required_points))
 
             record.write({'state': 'approved'})
-            record.message_post(body=_("✅ Approbation : %s points validés pour %s.") %
+            record.message_post(body=_("Approbation : %s points validés pour %s.") %
                                 (record.required_points, sponsor.name))
 
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    #To reject redemption
     def action_reject(self):
         for record in self:
             record.state = 'rejected'
-            record.message_post(body=_("❌ La demande de récompense a été rejetée."))
+            record.message_post(body=_("La demande de récompense a été rejetée, il faut retirer les points dans “Parrainer”"))
+        
 
     def write(self, vals):
         for record in self:
@@ -106,6 +116,7 @@ class SponsorshipRedemption(models.Model):
                     "Points insuffisants pour approbation. %s a %s disponibles, %s requis."
                 ) % (sponsor.name, current_available, new_points))
 
+    #To delete redemption
     def unlink(self):
         for record in self:
             if record.state == 'approved':

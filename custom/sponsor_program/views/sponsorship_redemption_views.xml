@@ -51,6 +51,7 @@
                     </header>
 
                     <sheet>
+                        <h1><field name="name"/></h1>
                         <group>
                             <group>
                                 <field name="sponsor_id"/>
@@ -70,6 +71,5 @@
                 </form>
             </field>
         </record>
-
     </data>
 </odoo>
