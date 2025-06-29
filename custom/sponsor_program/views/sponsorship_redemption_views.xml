@@ -7,7 +7,7 @@
             <field name="name">sponsorship.redemption.tree</field>
             <field name="model">sponsorship.redemption</field>
             <field name="arch" type="xml">
-                <list>
+                <list create="false">
                     <field name="date"/>
                     <field name="sponsor_id"/>
                     <field name="sponsored_id"/>
@@ -23,14 +23,14 @@
             <field name="name">sponsorship.redemption.form</field>
             <field name="model">sponsorship.redemption</field>
             <field name="arch" type="xml">
-                <form string="Redemption Request">
+                <form string="Redemption Request" create="false">
                     <header>
                         <!-- Submit Button: visible only in 'draft' -->
-                        <button name="action_submit_for_approval"
+                        <!-- <button name="action_submit_for_approval"
                                 type="object"
                                 string="Soumettre pour approbation"
                                 class="btn btn-primary"
-                                invisible="state != 'draft'"/>
+                                invisible="state != 'draft'"/> -->
 
                         <!-- Approve Button: visible only in 'pending' -->
                         <button name="action_approve"
@@ -47,15 +47,27 @@
                                 invisible="state != 'pending'"/>
 
                         <!-- Statusbar Field -->
-                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved,rejected"/>
+                        <field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected"/>
                     </header>
-
                     <sheet>
+                        <div class="oe-button-box" name="button_box">
+                            <button type="object" name="open_sponsored_partners" class="oe_stat_button" icon="fa-users">
+                                <field name="sponsored_count" widget="statinfo"/>
+                            </button>
+                            <button type="object" name="open_earned_points" class="oe_stat_button" icon="fa-star">
+                                <field name="total_earned_points" widget="statinfo"/>
+                            </button>
+                            <button type="object" name="open_redeemed_points" class="oe_stat_button" icon="fa-gift">
+                                <field name="total_redeemed_points" widget="statinfo"/>
+                            </button>
+                            <button type="object" name="open_available_points" class="oe_stat_button" icon="fa-balance-scale">
+                                <field name="available_points" widget="statinfo"/>
+                            </button>
+                        </div>
                         <h1><field name="name"/></h1>
                         <group>
                             <group>
                                 <field name="sponsor_id"/>
-                                <field name="state" readonly="1"/>
                                 <field name="date"/>
                                 <field name="required_points"/>
                             </group>
@@ -64,6 +76,7 @@
                                 <field name="sponsorship_id" readonly="1"/>
                                 <field name="reason"/>
                                 <field name="approver_id" readonly="1"/>
+                                <field  name="approval_date"/>
                             </group>
                         </group>
                     </sheet>

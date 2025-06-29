@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError
 import logging
 
@@ -14,54 +15,36 @@ class SponsorshipRedemption(models.Model):
     name = fields.Char(string="Nom", compute='_compute_name', store=True)
     sponsor_id = fields.Many2one('res.partner', string='Parrain', required=True)
     sponsored_id = fields.Many2one('res.partner', string='Filleul')
-    date = fields.Datetime(default=fields.Datetime.now, readonly=True)
+    date = fields.Datetime(default=fields.Datetime.now, readonly=True, string="Date de création")
     required_points = fields.Integer(string="Points", required=True, tracking=True, readonly=True)
     reason = fields.Char(string='Raison')
     state = fields.Selection([
-        ('draft', 'Brouillon'),
         ('pending', 'En attente'),
         ('approved', 'Approuvé'),
         ('rejected', 'Rejeté'),
-    ], default='draft', tracking=True)
-    approver_id = fields.Many2one('res.users', string='Approbateur', tracking=True)
-    sponsorship_id = fields.Many2one('sponsorship.relationship', string="Parrainage d'origine", ondelete='set null')
+    ], default='pending', tracking=True)
+    approver_id = fields.Many2one('res.users', string='Approuver par', tracking=True)
+    approval_date = fields.Datetime(string="Date d'approbation", readonly=True, tracking=True)
+    sponsorship_id = fields.Many2one('sponsorship.relationship', string="Description", ondelete='set null')
+
+    sponsored_count = fields.Integer(related='sponsor_id.sponsored_count', string='Total Parrainés', readonly=True, help="Total parrainés")
+    total_earned_points = fields.Integer(related='sponsor_id.total_earned_points', string='Points gagnés', readonly=True)
+    total_redeemed_points = fields.Integer(related='sponsor_id.total_redeemed_points', string='Points utilisés', readonly=True, help="Total des points consommés")
+    available_points = fields.Integer(related='sponsor_id.available_points', string='Points disponibles', readonly=True, help="Total des points disponibles")
+
     
 
     #Compute field for display_name
     @api.depends('sponsor_id')
     def _compute_name(self):
         for rec in self:
-            rec.name = f"{rec.sponsor_id.name}"
+            sponsor_name = rec.sponsor_id.name or ""
+            rec.name = f"{sponsor_name}"
 
     #To create redemption
     @api.model
     def create(self, vals):
         return super().create(vals)
-
-    def action_submit_for_approval(self):
-        for record in self:
-            if record.state != 'draft':
-                raise ValidationError(_("Cette demande a déjà été soumise ou traitée."))
-            record.state = 'pending'
-
-            manager = self.env['res.users'].search([('email', '=', 'alpha.barry88@laposte.net')], limit=1)
-            if not manager:
-                manager = self.env.ref('base.user_admin') or self.env.user
-                record.message_post(body=_("Alpha introuvable. Approbateur par défaut : %s.") % manager.name)
-
-            record.approver_id = manager
-            record.message_post(body=_("Demande soumise pour approbation à %s.") % manager.name)
-
-            record.activity_schedule(
-                'mail.mail_activity_data_todo',
-                user_id=manager.id,
-                summary=_("Approuver une récompense"),
-                note=_("%s veut la récompense de ses %s points.") % (record.sponsor_id.name, record.required_points),
-            )
-
-            template = self.env.ref('sponsor_program.mail_template_redemption_approval', raise_if_not_found=False)
-            if template:
-                template.send_mail(record.id, force_send=True)
 
     #To approve redemption
     def action_approve(self):
@@ -79,7 +62,12 @@ class SponsorshipRedemption(models.Model):
                     "Points insuffisants. %s a %s disponibles, mais %s sont requis."
                 ) % (sponsor.name, current_available, record.required_points))
 
-            record.write({'state': 'approved'})
+            record.write({
+                'state': 'approved', 
+                'approver_id': self.env.user.id,
+                'approval_date': datetime.now(),
+            })
+
             record.message_post(body=_("Approbation : %s points validés pour %s.") %
                                 (record.required_points, sponsor.name))
 
@@ -123,8 +111,62 @@ class SponsorshipRedemption(models.Model):
                 raise ValidationError(_("Une récompense approuvée ne peut pas être supprimée."))
             elif record.state == 'pending':
                 raise ValidationError(_("Cette récompense est en attente d'approbation et ne peut pas être supprimée. Veuillez d'abord la rejeter."))
-            elif record.state == 'draft':
-                _logger.info("Suppression de la récompense brouillon : %s", record.id)
             elif record.state == 'rejected':
                 _logger.info("Suppression de la récompense rejetée : %s", record.id)
         return super().unlink()
+    
+    #Smart buttons Actions
+    def open_sponsored_partners(self):
+        return{
+            'type': 'ir.actions.act_window',
+            'name': _('Filleuls'),
+            'res_model': 'sponsorship.relationship',
+            'view_mode': 'list,form',
+            'domain': [('sponsor_id', '=', self.sponsor_id.id)]
+        }
+    
+    def open_earned_points(self):
+        return self.open_sponsored_partners()
+    
+    def open_redeemed_points(self):
+        return{
+            'type': 'ir.actions.act_window',
+            'name': _('Récompenses utilisées'),
+            'res_model': 'sponsorship.redemption',
+            'view_mode': 'list,form',
+            'domain': [('sponsor_id', '=', self.sponsor_id.id), ('state', '=', 'approved')],
+        }
+
+    def open_available_points(self):
+        return{
+            'type': 'ir.actions.act_window',
+            'name': _('Récompenses'),
+            'res_model': 'sponsorship.redemption',
+            'view_mode': 'list,form',
+            'domain': [('sponsor_id', '=', self.sponsor_id.id)],
+        }
+    #####################Action submit for approval##########################
+    def action_submit_for_approval(self):
+        for record in self:
+            """ if record.state != 'draft':
+                raise ValidationError(_("Cette demande a déjà été soumise ou traitée."))
+            record.state = 'pending' """
+
+            manager = self.env['res.users'].search([('email', '=', 'alpha.barry88@laposte.net')], limit=1)
+            if not manager:
+                manager = self.env.ref('base.user_admin') or self.env.user
+                record.message_post(body=_("Alpha introuvable. Approbateur par défaut : %s.") % manager.name)
+
+            record.approver_id = manager
+            record.message_post(body=_("Demande soumise pour approbation à %s.") % manager.name)
+
+            record.activity_schedule(
+                'mail.mail_activity_data_todo',
+                user_id=manager.id,
+                summary=_("Approuver une récompense"),
+                note=_("%s veut la récompense de ses %s points.") % (record.sponsor_id.name, record.required_points),
+            )
+
+            template = self.env.ref('sponsor_program.mail_template_redemption_approval', raise_if_not_found=False)
+            if template:
+                template.send_mail(record.id, force_send=True)

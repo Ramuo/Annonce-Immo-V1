@@ -15,7 +15,7 @@ class SponsorshipRelationship(models.Model):
     _rec_name = 'sponsor_id'
 
 
-    display_name = fields.Char(string="Nom", compute='_compute_display_name', store=True)
+    display_name = fields.Char(string="Nom", compute='_compute_display_name', store=True) 
     sponsor_id = fields.Many2one('res.partner', string="Parrain", required=True)
     sponsored_id = fields.Many2one('res.partner', string="Filleul", required=True)
     datetime_created = fields.Datetime(string='Date de création', default=fields.Datetime.now, readonly=True)
@@ -38,7 +38,10 @@ class SponsorshipRelationship(models.Model):
     @api.depends('sponsor_id', 'sponsored_id')
     def _compute_display_name(self):
         for rec in self:
-            rec.display_name = f"{rec.sponsor_id.name} → {rec.sponsored_id.name}" 
+            sponsor_name = rec.sponsor_id.name or ""
+            sponsored_name = rec.sponsored_id.name or ""
+            rec.display_name = f"{sponsor_name} → {sponsored_name}"
+
     
     # Constrains for sponsorship
     @api.constrains('sponsor_id', 'sponsored_id')
@@ -77,15 +80,21 @@ class SponsorshipRelationship(models.Model):
 
     def action_confirm(self):
         for rel in self:
+            # To prevent confirmation of points awarded is <= 0
+            if rel.points_awarded <= 0:
+                raise ValidationError(_("Les points attribués doivent être différents de zéro et strictement positifs pour confirmer ce parrainage."))
+            
+            # If state is not confirmed, set it to confirm
             if rel.state != 'confirmed':
                 rel.state = 'confirmed'
                 rel.date_confirmed = fields.Datetime.now()
 
-                # Vérifier si une récompense liée existe déjà
+                # To Check if a linked reward already exists
                 existing_redemption = self.env['sponsorship.redemption'].search([
                     ('sponsorship_id', '=', rel.id)
                 ], limit=1)
 
+                # Create a linked reward already if it does not exist
                 if not existing_redemption:
                     self.env['sponsorship.redemption'].create({
                         'sponsor_id': rel.sponsor_id.id,
@@ -122,6 +131,10 @@ class SponsorshipRelationship(models.Model):
             rel.state = 'cancelled'
             rel.message_post(body=_("Parrainage annulé. Points remis à zéro. Récompense associée rejetée si existante."))
 
+    # To set in draft
+    def action_draft(self):
+        for record in self:
+            record.state = 'draft'
 
     #To delete Sponsorship
     def unlink(self):
