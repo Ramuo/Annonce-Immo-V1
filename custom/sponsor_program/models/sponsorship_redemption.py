@@ -27,10 +27,10 @@ class SponsorshipRedemption(models.Model):
     approval_date = fields.Datetime(string="Date d'approbation", readonly=True, tracking=True)
     sponsorship_id = fields.Many2one('sponsorship.relationship', string="Description", ondelete='set null')
 
-    sponsored_count = fields.Integer(related='sponsor_id.sponsored_count', string='Total Parrainés', readonly=True, help="Total parrainés")
+    sponsored_count = fields.Integer(related='sponsor_id.sponsored_count', string='Nombre parrainés')
     total_earned_points = fields.Integer(related='sponsor_id.total_earned_points', string='Points gagnés', readonly=True)
-    total_redeemed_points = fields.Integer(related='sponsor_id.total_redeemed_points', string='Points utilisés', readonly=True, help="Total des points consommés")
-    available_points = fields.Integer(related='sponsor_id.available_points', string='Points disponibles', readonly=True, help="Total des points disponibles")
+    total_redeemed_points = fields.Integer(related='sponsor_id.total_redeemed_points', string='Points utilisés', readonly=True)
+    available_points = fields.Integer(related='sponsor_id.available_points', string='Points disponibles', readonly=True)
 
     
 

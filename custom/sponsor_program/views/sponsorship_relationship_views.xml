@@ -14,6 +14,7 @@
                     <field name="sales_id"/>
                     <field name="points_awarded"/>
                     <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
+                    <field name="reward_state"/>
                 </list>
             </field>
         </record>
@@ -65,6 +66,7 @@
                                 <field name="sponsor_id" />
                                 <field name="points_awarded"/>
                                 <field name="sponsor_email" widget="email"/>
+                                <field name="reward_state"/>
                             </group> 
                             <group>
                                 <field name="sponsored_id" />

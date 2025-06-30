@@ -33,6 +33,10 @@ class SponsorshipRelationship(models.Model):
     ], default='draft', string="Statut")
     date_confirmed = fields.Datetime(string="Date de confirmation")
     redemption_ids = fields.One2many('sponsorship.redemption', 'sponsorship_id', string="Récompense liée")
+    #To show reward state in sponsorship.relationship
+    reward_id = fields.Many2one('sponsorship.redemption', string="Récompense")
+    reward_state = fields.Selection(related='reward_id.state', string="État de la récompense", store=True, readonly=True)
+
     
     #Compute field for display_name
     @api.depends('sponsor_id', 'sponsored_id')
@@ -96,7 +100,7 @@ class SponsorshipRelationship(models.Model):
 
                 # Create a linked reward already if it does not exist
                 if not existing_redemption:
-                    self.env['sponsorship.redemption'].create({
+                    reward = self.env['sponsorship.redemption'].create({
                         'sponsor_id': rel.sponsor_id.id,
                         'sponsored_id': rel.sponsored_id.id,  
                         'required_points': rel.points_awarded,
@@ -104,6 +108,7 @@ class SponsorshipRelationship(models.Model):
                         'state': 'pending',  
                         'sponsorship_id': rel.id,
                     })
+                    rel.reward_id = reward.id
 
     #To Cancel sponsorship
     def action_cancel(self):
