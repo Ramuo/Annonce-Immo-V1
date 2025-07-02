@@ -10,5 +10,6 @@
     <menuitem id="menu_create_contact" name="Créer contact" parent="menu_sponsorship_root" action="action_create_contact_wizard" sequence="3"/>
     <menuitem id="manu_sponsorship_configuration" name="Paramètres" parent="menu_sponsorship_root" sequence="4">
         <menuitem id="manu_sponsorship_type" name="Type de parrainage" action="action_sponsorship_type"/>
+        <menuitem id="menu_sponsorship_reward_type" name="Type de récompense" action="action_sponsorship_reward_type"/>
     </menuitem>
 </odoo>

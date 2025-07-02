@@ -34,6 +34,7 @@ class SponsorshipRedemption(models.Model):
     #To Add the smart button for sponsored sale order
     sale_order_count = fields.Integer(string="Commandes Filleul", compute="_compute_sale_order_count")
 
+    sponsorship_reward_type_id = fields.Many2one('sponsorship.reward.type', string="Type de récompense", required=True)
     
 
     #Compute field for display_name

@@ -14,6 +14,7 @@
                     <field name="required_points"/>
                     <field name="state" readonly="1" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/> 
                     <field name="approver_id" readonly="1"/>
+                    <field name="sponsorship_reward_type_id"/>
                 </list>
             </field>
         </record>
@@ -73,6 +74,7 @@
                                 <field name="sponsor_id"/>
                                 <field name="date"/>
                                 <field name="required_points"/>
+                                <field name="sponsorship_reward_type_id"/>
                             </group>
                             <group>
                                 <field name="sponsored_id"/>

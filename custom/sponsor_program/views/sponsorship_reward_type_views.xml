@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="sponsorship_reward_type_tree" model="ir.ui.view">
+            <field name="name">sponsorship.reward.type.tree</field>
+            <field name="model">sponsorship.reward.type</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="sponsorship_reward_type_form" model="ir.ui.view">
+            <field name="name">sponsorship.reward.type.form</field>
+            <field name="model">sponsorship.reward.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

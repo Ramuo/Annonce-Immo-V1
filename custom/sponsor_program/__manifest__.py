@@ -23,6 +23,7 @@
         'views/sponsor_wizard_views.xml',
         'views/sponsorship_redemption_views.xml',
         'views/sponsorship_type_views.xml',
+        'views/sponsorship_reward_type_views.xml',
         'views/actions.xml',
         'views/menus.xml',
     ], 
