@@ -19,6 +19,92 @@
             </field>
         </record>
 
+        <!-- Search View -->
+        <record id="view_sponsorship_redemption_search" model="ir.ui.view">
+            <field name="name">sponsorship.redemption.search</field>
+            <field name="model">sponsorship.redemption</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="date"/>
+                    <field name="sponsor_id"/>
+                    <field name="sponsored_id"/>
+                    <field name="state" /> 
+                    <field name="sponsorship_reward_type_id"/>
+                    <filter string="Approuvée" name="state" domain="[('state', '=', 'approved')]"/>
+                    <filter string="En attente" name="state" domain="[('state', '=', 'pending')]"/>
+                    <filter string="Rejetée" name="state" domain="[('state', '=', 'rejected')]"/>
+                    <separator/>
+                    <group expand="0" string="Regrouper par">
+                        <filter name="group_by_state" string="Statut"
+                                context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_sponsorship_redemption_kanban" model="ir.ui.view">
+            <field name="name">sponsorship.redemption.kanban</field>
+            <field name="model">sponsorship.redemption</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column"
+                        default_group_by="state"
+                        group_create="false"
+                        group_edit="true"
+                        group_delete="false">
+
+                    <field name="state"/>
+                    <field name="sponsor_id"/>
+                    <field name="sponsored_id"/>
+                    <field name="required_points"/>
+                    <field name="date"/>
+                    <field name="sponsorship_reward_type_id"/>
+                    <field name="reason"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card">
+                                <div class="o_kanban_header">
+                                    <strong><field name="sponsor_id"/></strong>
+                                    <span class="ml-2">🎁</span>
+                                    <strong><field name="sponsorship_reward_type_id"/></strong>
+                                </div>
+
+                                <div class="o_kanban_content">
+                                    <p><strong>Filleul :</strong> <field name="sponsored_id"/></p>
+                                    <p><strong>Points :</strong> <field name="required_points"/></p>
+                                    <p><strong>Type de récompense :</strong> <field name="sponsorship_reward_type_id"/></p>
+                                    <p><small><field name="date"/></small></p>
+                                </div>
+
+                                <div class="oe_kanban_footer">
+                                    <span t-if="record.state.raw_value == 'draft'" class="badge text-white bg-primary">
+                                        <field name="state"/>
+                                    </span>
+                                    <span t-elif="record.state.raw_value == 'pending'" class="badge text-white bg-warning">
+                                        <field name="state"/>
+                                    </span>
+                                    <span t-elif="record.state.raw_value == 'approved'" class="badge text-white bg-success">
+                                        <field name="state"/>
+                                    </span>
+                                    <span t-elif="record.state.raw_value == 'rejected'" class="badge text-white bg-danger">
+                                        <field name="state"/>
+                                    </span>
+                                    <span t-else="" class="badge text-white bg-secondary">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+
+                                <!--  -->
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!--  -->
+
         <!-- Form View -->
         <record id="view_sponsorship_redemption_form" model="ir.ui.view">
             <field name="name">sponsorship.redemption.form</field>

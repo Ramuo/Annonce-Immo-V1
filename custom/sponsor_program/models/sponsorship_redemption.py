@@ -22,7 +22,7 @@ class SponsorshipRedemption(models.Model):
         ('pending', 'En attente'),
         ('approved', 'Approuvée'),
         ('rejected', 'Rejetée'),
-    ], default='pending', tracking=True)
+    ], string="Statut", default='pending', tracking=True)
     approver_id = fields.Many2one('res.users', string='Approuver par', tracking=True)
     approval_date = fields.Datetime(string="Date d'approbation", readonly=True, tracking=True)
     sponsorship_id = fields.Many2one('sponsorship.relationship', string="Description", ondelete='set null')

@@ -7,7 +7,7 @@
         <record id="action_sponsorship_relationship" model="ir.actions.act_window">
             <field name="name">Parrainer</field>
             <field name="res_model">sponsorship.relationship</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,form,kanban</field>
         </record>
 
         <!-- Action to create contaxt wizard -->
@@ -22,7 +22,7 @@
         <record id="action_sponsorship_redemption" model="ir.actions.act_window">
             <field name="name">Récompenses</field>
             <field name="res_model">sponsorship.redemption</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,form,kanban</field>
         </record> 
         <!-- Action for sponsorship type -->
          <record id="action_sponsorship_type" model="ir.actions.act_window">
