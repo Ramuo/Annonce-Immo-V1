@@ -63,6 +63,9 @@
                             <button type="object" name="open_available_points" class="oe_stat_button" icon="fa-balance-scale">
                                 <field name="available_points" widget="statinfo"/>
                             </button>
+                            <button type="object" name="action_view_sponsored_orders" class="oe_stat_button" icon="fa-usd">
+                                <field name="sale_order_count" widget="statinfo"/>
+                            </button>
                         </div>
                         <h1><field name="name"/></h1>
                         <group>

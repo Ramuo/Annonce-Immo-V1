@@ -36,6 +36,10 @@ class SponsorshipRelationship(models.Model):
     #To show reward state in sponsorship.relationship
     reward_id = fields.Many2one('sponsorship.redemption', string="Récompense")
     reward_state = fields.Selection(related='reward_id.state', string="État de la récompense", store=True, readonly=True)
+    #To show sponsored order via smart button in sponsorship.relationship
+    sale_order_count = fields.Integer(string="Commandes Filleul", compute="_compute_sale_order_count")
+
+    type_parrainage_id = fields.Many2one('sponsorship.type', string='Type de parrainage')
 
     
     #Compute field for display_name
@@ -46,6 +50,13 @@ class SponsorshipRelationship(models.Model):
             sponsored_name = rec.sponsored_id.name or ""
             rec.display_name = f"{sponsor_name} → {sponsored_name}"
 
+    # Compute for sale order count
+    def _compute_sale_order_count(self):
+        for rec in self:
+            rec.sale_order_count = self.env['sale.order'].search_count([
+                ('partner_id', '=', rec.sponsored_id.id),
+                ('state', 'in', ['sale', 'done'])
+            ])
     
     # Constrains for sponsorship
     @api.constrains('sponsor_id', 'sponsored_id')
@@ -85,8 +96,8 @@ class SponsorshipRelationship(models.Model):
     def action_confirm(self):
         for rel in self:
             # To prevent confirmation of points awarded is <= 0
-            if rel.points_awarded <= 0:
-                raise ValidationError(_("Les points attribués doivent être différents de zéro et strictement positifs pour confirmer ce parrainage."))
+            if rel.points_awarded <= 0 or rel.points_awarded > 100:
+                raise ValidationError(_("Les points attribués doivent être différents de zéro, strictement positifs et inférieur à 100 pour confirmer ce parrainage."))
             
             # If state is not confirmed, set it to confirm
             if rel.state != 'confirmed':
@@ -192,6 +203,17 @@ class SponsorshipRelationship(models.Model):
         return rec
        
     
+    #Smart button action to show sponsored order
+    def action_view_sponsored_orders(self):
+        self.ensure_one()
+        return {
+            'name': _('Commandes du filleul'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('partner_id', '=', self.sponsored_id.id)],
+            'context': {'default_partner_id': self.sponsored_id.id},
+        }
 
 
     ##################################FILTRE#################################################""""

@@ -22,6 +22,7 @@
         'views/res_partner_views.xml',
         'views/sponsor_wizard_views.xml',
         'views/sponsorship_redemption_views.xml',
+        'views/sponsorship_type_views.xml',
         'views/actions.xml',
         'views/menus.xml',
     ], 
@@ -30,3 +31,8 @@
     'application': True,
     'license': 'LGPL-3',
 }
+
+
+
+
+

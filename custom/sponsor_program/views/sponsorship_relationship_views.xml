@@ -13,6 +13,7 @@
                     <field name="sponsored_id"/>
                     <field name="sales_id"/>
                     <field name="points_awarded"/>
+                    <field name="type_parrainage_id"/>
                     <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
                     <field name="reward_state"/>
                 </list>
@@ -60,11 +61,17 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancelled"/>
                     </header>
                     <sheet>
+                        <div class="oe-button-box" name="button_box">
+                            <button type="object" name="action_view_sponsored_orders" class="oe_stat_button" icon="fa-usd">
+                                <field name="sale_order_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <h1><field name="display_name"/></h1>
                         <group>
                             <group>
                                 <field name="sponsor_id" />
                                 <field name="points_awarded"/>
+                                <field name="type_parrainage_id"/>
                                 <field name="sponsor_email" widget="email"/>
                                 <field name="reward_state"/>
                             </group> 

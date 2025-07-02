@@ -20,17 +20,19 @@ class SponsorshipRedemption(models.Model):
     reason = fields.Char(string='Raison')
     state = fields.Selection([
         ('pending', 'En attente'),
-        ('approved', 'Approuvé'),
-        ('rejected', 'Rejeté'),
+        ('approved', 'Approuvée'),
+        ('rejected', 'Rejetée'),
     ], default='pending', tracking=True)
     approver_id = fields.Many2one('res.users', string='Approuver par', tracking=True)
     approval_date = fields.Datetime(string="Date d'approbation", readonly=True, tracking=True)
     sponsorship_id = fields.Many2one('sponsorship.relationship', string="Description", ondelete='set null')
-
+    #To add the smart buttons in sponsorship.redemption
     sponsored_count = fields.Integer(related='sponsor_id.sponsored_count', string='Nombre parrainés')
     total_earned_points = fields.Integer(related='sponsor_id.total_earned_points', string='Points gagnés', readonly=True)
     total_redeemed_points = fields.Integer(related='sponsor_id.total_redeemed_points', string='Points utilisés', readonly=True)
     available_points = fields.Integer(related='sponsor_id.available_points', string='Points disponibles', readonly=True)
+    #To Add the smart button for sponsored sale order
+    sale_order_count = fields.Integer(string="Commandes Filleul", compute="_compute_sale_order_count")
 
     
 
@@ -40,6 +42,14 @@ class SponsorshipRedemption(models.Model):
         for rec in self:
             sponsor_name = rec.sponsor_id.name or ""
             rec.name = f"{sponsor_name}"
+
+    #Compute sale order count for sponsored
+    def _compute_sale_order_count(self):
+        for rec in self:
+            rec.sale_order_count = self.env['sale.order'].search_count([
+                ('partner_id', '=', rec.sponsored_id.id),
+                ('state', 'in', ['sale', 'done'])
+        ])
 
     #To create redemption
     @api.model
@@ -144,6 +154,17 @@ class SponsorshipRedemption(models.Model):
             'res_model': 'sponsorship.redemption',
             'view_mode': 'list,form',
             'domain': [('sponsor_id', '=', self.sponsor_id.id)],
+        }
+    #Smart button action to show sponsored order
+    def action_view_sponsored_orders(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Commandes du filleul'),
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('partner_id', '=', self.sponsored_id.id)],
+            'context': {'default_partner_id': self.sponsored_id.id},
         }
     #####################Action submit for approval##########################
     def action_submit_for_approval(self):

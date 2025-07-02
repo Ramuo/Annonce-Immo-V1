@@ -5,7 +5,7 @@
     <data>
         <!-- Sponsorship relation -->
         <record id="action_sponsorship_relationship" model="ir.actions.act_window">
-            <field name="name">Parrainage</field>
+            <field name="name">Parrainer</field>
             <field name="res_model">sponsorship.relationship</field>
             <field name="view_mode">list,form</field>
         </record>
@@ -20,9 +20,15 @@
 
         <!-- Action for sponsorship redemption -->
         <record id="action_sponsorship_redemption" model="ir.actions.act_window">
-            <field name="name">Recompense</field>
+            <field name="name">Récompenses</field>
             <field name="res_model">sponsorship.redemption</field>
             <field name="view_mode">list,form</field>
         </record> 
+        <!-- Action for sponsorship type -->
+         <record id="action_sponsorship_type" model="ir.actions.act_window">
+            <field name="name">Type de parrainage</field>
+            <field name="res_model">sponsorship.type</field>
+            <field name="view_mode">list,form</field>
+         </record>
     </data>
 </odoo>
