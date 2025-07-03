@@ -12,7 +12,7 @@
                     <field name="sponsor_id"/>
                     <field name="sponsored_id"/>
                     <field name="required_points"/>
-                    <field name="state" readonly="1" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/> 
+                    <field name="state" readonly="1" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" widget="badge"/> 
                     <field name="approver_id" readonly="1"/>
                     <field name="sponsorship_reward_type_id"/>
                 </list>
@@ -94,16 +94,12 @@
                                         <field name="state"/>
                                     </span>
                                 </div>
-
-                                <!--  -->
                             </div>
                         </t>
                     </templates>
                 </kanban>
             </field>
         </record>
-
-        <!--  -->
 
         <!-- Form View -->
         <record id="view_sponsorship_redemption_form" model="ir.ui.view">

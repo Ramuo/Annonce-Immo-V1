@@ -13,9 +13,8 @@
                     <field name="sponsored_id"/>
                     <field name="sales_id"/>
                     <field name="points_awarded"/>
+                    <field name="state" decoration-primary="state == 'draft'" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'" widget="badge"/>
                     <field name="type_parrainage_id"/>
-                    <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
-                    <field name="reward_state"/>
                 </list>
             </field>
         </record>

@@ -8,7 +8,7 @@ class ResPartner(models.Model):
     sponsor_ids = fields.One2many('sponsorship.relationship','sponsor_id', string="Parrain")
     sponsored_ids = fields.One2many('sponsorship.relationship','sponsor_id', string="Parrainé")
 
-    sponsored_count = fields.Integer(string='Total parrainés', compute="_compute_sponsored_count")
+    sponsored_count = fields.Integer(string='Total Filleuls', compute="_compute_sponsored_count")
 
     total_earned_points = fields.Integer(
         string="Total points gagnés", compute='_compute_total_earned_points', store=True, tracking=True

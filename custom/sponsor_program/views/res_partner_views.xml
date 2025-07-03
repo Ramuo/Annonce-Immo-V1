@@ -13,7 +13,7 @@
                             <span class="o_stat_value">
                                 <field name="sponsored_count" nolabel="1"/>
                             </span>
-                            <span class="o_stat_text">Parrainés</span>
+                            <span class="o_stat_text">Filleuls</span>
                         </div>
                     </button>
                 </xpath>
@@ -65,7 +65,7 @@
                             <list editable="bottom">
                                 <field name="sponsored_id"/>
                                 <field name="points_awarded"/>
-                                <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'"/>
+                                <field name="state" decoration-success="state == 'confirmed'" decoration-danger="state == 'cancelled'" widget="badge"/>
                             </list>
                             </field>
                         </group>
@@ -75,19 +75,11 @@
                                 <list editable="bottom">
                                     <field name="date"/>
                                     <field name="required_points"/>
-                                    <field name="state" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+                                    <field name="state" decoration-warning="state == 'pending'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" widget="badge"/>
                                     <field name="approver_id"/>
                                 </list>
                             </field>
                         </group>
-                        <!-- <group>
-                            <group string="Points et Récompenses">
-                                <field name="sponsored_count" readonly="1"/>
-                                <field name="total_earned_points" readonly="1"/>
-                                <field name="total_redeemed_points" readonly="1"/>
-                                <field name="available_points" readonly="1"/>
-                            </group>
-                        </group> -->
                     </page>
                 </notebook>
             </field>
