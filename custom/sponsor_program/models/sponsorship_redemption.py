@@ -6,6 +6,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 class SponsorshipRedemption(models.Model):
     _name = 'sponsorship.redemption'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -17,14 +18,13 @@ class SponsorshipRedemption(models.Model):
     sponsored_id = fields.Many2one('res.partner', string='Filleul')
     date = fields.Datetime(default=fields.Datetime.now, readonly=True, string="Date de création")
     required_points = fields.Integer(string="Points", required=True, tracking=True, readonly=True)
-    reason = fields.Char(string='Raison')
     state = fields.Selection([
         ('pending', 'En attente'),
         ('approved', 'Approuvée'),
         ('rejected', 'Rejetée'),
     ], string="Statut", default='pending', tracking=True)
     approver_id = fields.Many2one('res.users', string='Approuver par', tracking=True)
-    approval_date = fields.Datetime(string="Date d'approbation", readonly=True, tracking=True)
+    approval_date = fields.Datetime(string="Date d'approbation", tracking=True)
     sponsorship_id = fields.Many2one('sponsorship.relationship', string="Description", ondelete='set null')
     #To add the smart buttons in sponsorship.redemption
     sponsored_count = fields.Integer(related='sponsor_id.sponsored_count', string='Total Filleuls')
@@ -33,9 +33,10 @@ class SponsorshipRedemption(models.Model):
     available_points = fields.Integer(related='sponsor_id.available_points', string='Points disponibles', readonly=True)
     #To Add the smart button for sponsored sale order
     sale_order_count = fields.Integer(string="Commandes Filleul", compute="_compute_sale_order_count")
-
-    sponsorship_reward_type_id = fields.Many2one('sponsorship.reward.type', string="Type de récompense", required=True)
-    
+    #add type de recompense in sponsorship.redemption 
+    sponsorship_reward_type_id = fields.Many2one('sponsorship.reward.type', string="Type de récompense")
+    #Add field to show if notification is sent to the sponsor after approval
+    notification_sent = fields.Boolean(string="Notification envoyée", default=False, readonly=True)
 
     #Compute field for display_name
     @api.depends('sponsor_id')
@@ -47,10 +48,13 @@ class SponsorshipRedemption(models.Model):
     #Compute sale order count for sponsored
     def _compute_sale_order_count(self):
         for rec in self:
-            rec.sale_order_count = self.env['sale.order'].search_count([
-                ('partner_id', '=', rec.sponsored_id.id),
-                ('state', 'in', ['sale', 'done'])
-        ])
+            if rec.sponsored_id:
+                rec.sale_order_count = self.env['sale.order'].search_count([
+                    ('partner_id', '=', rec.sponsored_id.id),
+                    ('state', 'in', ['sale', 'done'])
+                ])
+            else:
+                rec.sale_order_count = 0
 
     #To create redemption
     @api.model
@@ -167,28 +171,41 @@ class SponsorshipRedemption(models.Model):
             'domain': [('partner_id', '=', self.sponsored_id.id)],
             'context': {'default_partner_id': self.sponsored_id.id},
         }
-    #####################Action submit for approval##########################
-    def action_submit_for_approval(self):
-        for record in self:
-            """ if record.state != 'draft':
-                raise ValidationError(_("Cette demande a déjà été soumise ou traitée."))
-            record.state = 'pending' """
+    
+    #Action to send approval notification email to sponsor
+    def action_send_approval_notification(self):
+        self.ensure_one()
 
-            manager = self.env['res.users'].search([('email', '=', 'alpha.barry88@laposte.net')], limit=1)
-            if not manager:
-                manager = self.env.ref('base.user_admin') or self.env.user
-                record.message_post(body=_("Alpha introuvable. Approbateur par défaut : %s.") % manager.name)
+        if self.notification_sent:
+            raise ValidationError(_("La notification a déjà été envoyée."))
 
-            record.approver_id = manager
-            record.message_post(body=_("Demande soumise pour approbation à %s.") % manager.name)
+        if self.state != 'approved':
+            raise ValidationError(_("La notification ne peut être envoyée que si la récompense est approuvée."))
 
-            record.activity_schedule(
-                'mail.mail_activity_data_todo',
-                user_id=manager.id,
-                summary=_("Approuver une récompense"),
-                note=_("%s veut la récompense de ses %s points.") % (record.sponsor_id.name, record.required_points),
-            )
+        if not self.sponsor_id or not self.sponsor_id.email or not self.sponsor_id.email.strip():
+            raise ValidationError(_("Le parrain n'a pas d'adresse email valide."))
 
-            template = self.env.ref('sponsor_program.mail_template_redemption_approval', raise_if_not_found=False)
-            if template:
-                template.send_mail(record.id, force_send=True)
+        template = self.env.ref('sponsor_program.mail_template_sponsorship_redemption_approved', raise_if_not_found=False)
+        if not template:
+            raise ValidationError(_("Le modèle d'email est introuvable."))
+
+        # Sujet personnalisé sécurisé sans retour à la ligne
+        raw_subject = f"🎉 Félicitations {self.sponsor_id.name} — votre récompense est approuvée !"
+        clean_subject = raw_subject.replace('\n', ' ').replace('\r', '')
+
+        email_values = {
+            'email_to': self.sponsor_id.email.strip(),
+            'email_from': self.env.user.email_formatted,
+            'subject': clean_subject,
+        }
+
+        print(email_values)
+
+        template.send_mail(self.id, force_send=True, email_values=email_values)
+
+        self.write({'notification_sent': True})
+        self.message_post(body=_("Notification envoyée à %s.") % self.sponsor_id.name)
+
+
+   
+    

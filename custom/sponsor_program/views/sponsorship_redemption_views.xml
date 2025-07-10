@@ -59,7 +59,6 @@
                     <field name="required_points"/>
                     <field name="date"/>
                     <field name="sponsorship_reward_type_id"/>
-                    <field name="reason"/>
 
                     <templates>
                         <t t-name="kanban-box">
@@ -108,13 +107,6 @@
             <field name="arch" type="xml">
                 <form string="Redemption Request" create="false">
                     <header>
-                        <!-- Submit Button: visible only in 'draft' -->
-                        <!-- <button name="action_submit_for_approval"
-                                type="object"
-                                string="Soumettre pour approbation"
-                                class="btn btn-primary"
-                                invisible="state != 'draft'"/> -->
-
                         <!-- Approve Button: visible only in 'pending' -->
                         <button name="action_approve"
                                 type="object"
@@ -128,7 +120,12 @@
                                 string="Rejeter"
                                 class="btn btn-danger"
                                 invisible="state != 'pending'"/>
-
+                        <!-- Button: To send to notification to sponsor when reward is approved -->
+                        <button name="action_send_approval_notification"
+                                type="object"
+                                string="Envoyer la notification"
+                                class="btn btn-primary"
+                                invisible="state != 'approved' or notification_sent"/>
                         <!-- Statusbar Field -->
                         <field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected"/>
                     </header>
@@ -157,11 +154,11 @@
                                 <field name="date"/>
                                 <field name="required_points"/>
                                 <field name="sponsorship_reward_type_id"/>
+                                <field name="notification_sent"/>
                             </group>
                             <group>
                                 <field name="sponsored_id"/>
                                 <field name="sponsorship_id" readonly="1"/>
-                                <field name="reason"/>
                                 <field name="approver_id" readonly="1"/>
                                 <field  name="approval_date"/>
                             </group>

@@ -1,1 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_sponsorship_redemption_approved" model="mail.template">
+            <field name="name">Sponsor Reward Approval Notification</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_redemption"/>
+
+            <!-- Directly set dynamic content in the subject -->
+            <field name="subject">Félicitations ${object.sponsor_id.name} 🎉!</field>
+
+            <!-- Direct dynamic content for email fields -->
+            <field name="email_from">${user.email_formatted or 'noreply@yourcompany.com'}</field>
+            <field name="email_to">${object.sponsor_id.email or 'placeholder@example.com'}</field>
+
+            <field name="body_html" type="html">
+                <div style="font-family: Georgia, sans-serif; font-size: 16px; color: #333;">
+                    <p>
+                        Cher(e) <strong><t t-out="object.sponsor_id.name"/></strong>,
+                    </p>
+                    <p>
+                        Nous avons le plaisir de vous informer que votre récompense pour avoir parrainé
+                        <strong><t t-out="object.sponsored_id.name"/></strong> a été
+                        <span style="color: #28a745;"><strong>approuvée</strong></span> ! Vous avez remporté un(e) 
+                        <strong><t t-out="object.sponsorship_reward_type_id.name"/></strong> 🎁 !
+                    </p>
+                    <p>
+                        Merci pour votre confiance et pour avoir contribué à l’extension de notre réseau. Si vous avez d'autres proches ou amis intéressés par nos services, n'hésitez pas à les parrainer pour profiter de nos offres.
+                    </p>
+
+                    <p>
+                        Nous restons à votre disposition pour toute question et vous remercions de faire partie de notre programme de parrainage 💚.
+                    </p>
+                    
+                    <p>Bien cordialement,</p>
+                    <p><strong>L’équipe Adekwatts</strong></p>
+
+                    <!-- <p style="margin-top: 20px;">Vous pouvez consulter toutes vos récompenses dans votre espace personnel :</p>
+                    <p style="text-align: center;">
+                        <a href="https://yourcompany.com/rewards"
+                           style="background-color: #28a745; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                            Voir mes récompenses
+                        </a>
+                    </p> -->
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

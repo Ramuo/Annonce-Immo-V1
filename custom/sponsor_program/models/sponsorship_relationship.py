@@ -53,10 +53,14 @@ class SponsorshipRelationship(models.Model):
     # Compute for sale order count
     def _compute_sale_order_count(self):
         for rec in self:
-            rec.sale_order_count = self.env['sale.order'].search_count([
-                ('partner_id', '=', rec.sponsored_id.id),
-                ('state', 'in', ['sale', 'done'])
-            ])
+            if rec.sponsored_id:
+                rec.sale_order_count = self.env['sale.order'].search_count([
+                    ('partner_id', '=', rec.sponsored_id.id),
+                    ('state', 'in', ['sale', 'done'])
+                ])
+            else:
+                rec.sale_order_count = 0
+
     
     # Constrains for sponsorship
     @api.constrains('sponsor_id', 'sponsored_id')

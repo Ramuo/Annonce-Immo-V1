@@ -26,6 +26,8 @@
         'views/sponsorship_reward_type_views.xml',
         'views/actions.xml',
         'views/menus.xml',
+        #Data
+        'data/mail.template.xml',
     ], 
     
     'installable': True,
