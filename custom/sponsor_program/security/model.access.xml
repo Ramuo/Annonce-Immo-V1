@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data> 
+        <!-- Full access for sponsor admins to Sponsorship Type -->
+        <record id="sponsor_program.access_sponsorship_type" model="ir.model.access">
+            <field name="name">Sponsorship Type Admin Access</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_type"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_admin"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- Full access for sponsor admins to Sponsorship Reward Type -->
+        <record id="access_sponsorship_reward_type" model="ir.model.access">
+            <field name="name">Sponsorship Reward Type Admin Access</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_reward_type"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_admin"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+       
+        <!-- Limited access for sponsor users to Sponsorship Type -->
+        <record id="access_sponsorship_type_user" model="ir.model.access">
+            <field name="name">Sponsorship type access for user</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_type"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Limited access for sponsor users to Sponsorship Reward Type -->
+        <record id="access_sponsorship_reward_type_user" model="ir.model.access">
+            <field name="name">Sponsorship reward type access for user</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_reward_type"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+    </data>
+  
+</odoo>

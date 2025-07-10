@@ -51,15 +51,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.available_points = partner.total_earned_points - partner.total_redeemed_points
 
-
-    """ @api.constrains('available_points')
-    def _check_available_points_positive(self):
-        for rec in self:
-            if rec.available_points < 0:
-                raise ValidationError(_("Les points disponibles ne peuvent pas être négatifs.")) """
-
-##############################################################################################################
-
     # Action methods for contacts to view sponsored
     def action_open_sponsored_contacts(self):
         self.ensure_one()
@@ -84,5 +75,7 @@ class ResPartner(models.Model):
             'context': {'default_sponsored_id': self.id}
         }
     
+    ##############################################################################################################
+   
 
       

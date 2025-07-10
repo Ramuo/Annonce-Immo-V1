@@ -4,10 +4,8 @@
         <record id="mail_template_sponsorship_redemption_approved" model="mail.template">
             <field name="name">Sponsor Reward Approval Notification</field>
             <field name="model_id" ref="sponsor_program.model_sponsorship_redemption"/>
-
             <!-- Directly set dynamic content in the subject -->
             <field name="subject">Félicitations ${object.sponsor_id.name} 🎉!</field>
-
             <!-- Direct dynamic content for email fields -->
             <field name="email_from">${user.email_formatted or 'noreply@yourcompany.com'}</field>
             <field name="email_to">${object.sponsor_id.email or 'placeholder@example.com'}</field>

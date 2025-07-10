@@ -17,6 +17,7 @@
         # Security
         'security/ir.model.access.csv',
         'security/res_groups.xml',
+        'security/model.access.xml',
         #Views
         'views/sponsorship_relationship_views.xml',
         'views/res_partner_views.xml',

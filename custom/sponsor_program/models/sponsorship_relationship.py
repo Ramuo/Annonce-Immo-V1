@@ -119,7 +119,6 @@ class SponsorshipRelationship(models.Model):
                         'sponsor_id': rel.sponsor_id.id,
                         'sponsored_id': rel.sponsored_id.id,  
                         'required_points': rel.points_awarded,
-                        'reason': _('Récompense en attente pour le parrainage de %s') % rel.sponsored_id.name,
                         'state': 'pending',  
                         'sponsorship_id': rel.id,
                     })
