@@ -7,7 +7,7 @@
             <field name="name">sponsorship.redemption.tree</field>
             <field name="model">sponsorship.redemption</field>
             <field name="arch" type="xml">
-                <list create="false">
+                <list create="False">
                     <field name="date"/>
                     <field name="sponsor_id"/>
                     <field name="sponsored_id"/>
@@ -105,27 +105,30 @@
             <field name="name">sponsorship.redemption.form</field>
             <field name="model">sponsorship.redemption</field>
             <field name="arch" type="xml">
-                <form string="Redemption Request" create="false">
+                <form string="Redemption Request" create="False">
                     <header>
                         <!-- Approve Button: visible only in 'pending' -->
                         <button name="action_approve"
                                 type="object"
                                 string="Approuver"
                                 class="btn btn-primary"
-                                invisible="state != 'pending'"/>
+                                invisible="state != 'pending'"
+                                groups="sponsor_program.group_sponsor_admin"/>
 
                         <!-- Reject Button: visible only in 'pending' -->
                         <button name="action_reject"
                                 type="object"
                                 string="Rejeter"
                                 class="btn btn-danger"
-                                invisible="state != 'pending'"/>
+                                invisible="state != 'pending'"
+                                groups="sponsor_program.group_sponsor_admin"/>
                         <!-- Button: To send to notification to sponsor when reward is approved -->
                         <button name="action_send_approval_notification"
                                 type="object"
-                                string="Envoyer la notification"
+                                string="Envoyer une notification au parrain"
                                 class="btn btn-primary"
-                                invisible="state != 'approved' or notification_sent"/>
+                                invisible="state != 'approved' or notification_sent"
+                                groups="sponsor_program.group_sponsor_admin"/>
                         <!-- Statusbar Field -->
                         <field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected"/>
                     </header>

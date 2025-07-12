@@ -2,6 +2,17 @@
 
 <odoo>
     <data> 
+        <!-- Full access for sponsor admins to Sponsorship redemption -->
+        <record id="sponsor_program.access_sponsorship_redemption" model="ir.model.access">
+            <field name="name">Sponsorship redemption Admin Access</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_redemption"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_admin"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
         <!-- Full access for sponsor admins to Sponsorship Type -->
         <record id="sponsor_program.access_sponsorship_type" model="ir.model.access">
             <field name="name">Sponsorship Type Admin Access</field>
@@ -24,6 +35,16 @@
             <field name="perm_unlink" eval="1"/>
         </record>
 
+        <!-- Limited access for sponsor users to Sponsorship Redemption -->
+        <record id="access_sponsorship_redemption_user" model="ir.model.access">
+            <field name="name">Sponsorship redemption User Access</field>
+            <field name="model_id" ref="sponsor_program.model_sponsorship_redemption"/>
+            <field name="group_id" ref="sponsor_program.group_sponsor_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
        
         <!-- Limited access for sponsor users to Sponsorship Type -->
         <record id="access_sponsorship_type_user" model="ir.model.access">

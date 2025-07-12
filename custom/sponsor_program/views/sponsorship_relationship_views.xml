@@ -98,7 +98,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_confirm" string="Confirmer" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_confirm" string="Confirmer" type="object" class="btn-primary" invisible="state != 'draft'"  groups="sponsor_program.group_sponsor_admin"/>
                         <button name="action_cancel" string="Annulé" type="object" class="btn-danger" invisible="state != 'confirmed'"/>
                         <button name="action_draft" string="Remettre en brouillon" type="object" class="btn-primary" invisible="state != 'cancelled'"/>
                         <!-- Statusbar Field -->

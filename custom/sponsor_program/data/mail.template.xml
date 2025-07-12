@@ -15,21 +15,21 @@
                     <p>
                         Cher(e) <strong><t t-out="object.sponsor_id.name"/></strong>,
                     </p>
-                    <p>
+                    <p style="margin-top: 20px;">
                         Nous avons le plaisir de vous informer que votre récompense pour avoir parrainé
                         <strong><t t-out="object.sponsored_id.name"/></strong> a été
                         <span style="color: #28a745;"><strong>approuvée</strong></span> ! Vous avez remporté un(e) 
                         <strong><t t-out="object.sponsorship_reward_type_id.name"/></strong> 🎁 !
                     </p>
-                    <p>
+                    <p style="margin-top: 20px;">
                         Merci pour votre confiance et pour avoir contribué à l’extension de notre réseau. Si vous avez d'autres proches ou amis intéressés par nos services, n'hésitez pas à les parrainer pour profiter de nos offres.
                     </p>
 
-                    <p>
-                        Nous restons à votre disposition pour toute question et vous remercions de faire partie de notre programme de parrainage 💚.
+                    <p style="margin-top: 20px;">
+                        Nous restons à votre disposition pour toute question et vous remercions de faire partie de notre programme de parrainage 🧡🖤💚.
                     </p>
                     
-                    <p>Bien cordialement,</p>
+                    <p style="margin-top: 20px;">Bien cordialement,</p>
                     <p><strong>L’équipe Adekwatts</strong></p>
 
                     <!-- <p style="margin-top: 20px;">Vous pouvez consulter toutes vos récompenses dans votre espace personnel :</p>
